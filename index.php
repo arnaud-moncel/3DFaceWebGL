@@ -1,3 +1,4 @@
+</head>
 <?php
 /**
  * Created by PhpStorm.

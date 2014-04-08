@@ -36,7 +36,8 @@
 
     var shaderProgram;
 
-    function initShaders(gl) {
+    function initShaders(gl)
+    {
         var fragmentShader = getShader(gl, "shader-fs");
         var vertexShader = getShader(gl, "shader-vs");
 
@@ -354,7 +355,7 @@ function Box(gl, size) {
             -1.0, -1.0, -1.0,
             -1.0, -1.0,  1.0,
             -1.0,  1.0,  1.0,
-            -1.0,  1.0, -1.0,
+            -1.0,  1.0, -1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         this.cubeVertexPositionBuffer.itemSize = 3;
@@ -397,7 +398,7 @@ function Box(gl, size) {
             -1.0,  0.0,  0.0,
             -1.0,  0.0,  0.0,
             -1.0,  0.0,  0.0,
-            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
         this.cubeVertexNormalBuffer.itemSize = 3;
@@ -439,7 +440,7 @@ function Box(gl, size) {
             0.0, 0.0,
             1.0, 0.0,
             1.0, 1.0,
-            0.0, 1.0,
+            0.0, 1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
         this.cubeVertexTextureCoordBuffer.itemSize = 2;
