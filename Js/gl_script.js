@@ -1,14 +1,19 @@
 var gl;
 
-function initGL(canvas) {
-    try {
+function initGL(canvas)
+{
+    try
+    {
         gl = canvas.getContext("experimental-webgl");
         gl.viewportWidth = canvas.width;
         gl.viewportHeight = canvas.height;
-    } catch (e) {
+    }
+    catch (e)
+    {
         alert(e);
     }
-    if (!gl) {
+    if (!gl)
+    {
         alert("Could not initialise WebGL, sorry :-(");
     }
 }
@@ -51,7 +56,8 @@ var scaleMat = mat4.create();
 mat4.identity(scaleMat);
 scaleTransform = new Transform(scaleMat);
 
-function createScene() {
+function createScene()
+{
     scene = new Scene(gl);
 
     faceGroup = new Group();
@@ -78,11 +84,8 @@ function createScene() {
 }
 
 
-var lastTime = 0;
-
-
-
-function tick() {
+function tick()
+{
     requestAnimFrame(tick);
     scene.draw(gl);
 }
@@ -94,18 +97,22 @@ var lastMouseY = null;
 
 
 
-function handleMouseDown(event) {
+function handleMouseDown(event)
+{
     mouseDown = true;
     lastMouseX = event.clientX;
     lastMouseY = event.clientY;
 }
 
-function handleMouseUp(event) {
+function handleMouseUp(event)
+{
     mouseDown = false;
 }
 
-function handleMouseMove(event) {
-    if (!mouseDown) {
+function handleMouseMove(event)
+{
+    if (!mouseDown)
+    {
         return;
     }
     var newX = event.clientX;
@@ -131,7 +138,6 @@ function scaleScene(e)
     var evt=window.event || e; //equalize event object
     var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta; //delta returns +120 when wheel is scrolled up, -120 when scrolled down
     scale+=delta*0.01;//(delta<=-120)? 0.01 : -0.01; //move image index forward or back, depending on whether wheel is scrolled down or up
-    document.getElementById("scale").innerHTML=scale;
     mat4.identity(scaleMat);
     mat4.scale(scaleMat,  [scale, scale, scale]);
 
