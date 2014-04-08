@@ -136,8 +136,18 @@ var scale = 1;
 function scaleScene(e)
 {
     var evt=window.event || e; //equalize event object
-    var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta; //delta returns +120 when wheel is scrolled up, -120 when scrolled down
-    scale+=delta*0.01;//(delta<=-120)? 0.01 : -0.01; //move image index forward or back, depending on whether wheel is scrolled down or up
+
+    var delta = 0;
+    if(evt.detail > 0)
+        delta = -0.5;
+    else
+        delta = 0.5;
+
+    scale+=delta;
+
+    if(scale < 0.5)
+        scale = 0.5;
+
     mat4.identity(scaleMat);
     mat4.scale(scaleMat,  [scale, scale, scale]);
 

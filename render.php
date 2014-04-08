@@ -61,3 +61,4 @@
 
  <?php
     include "footer.html";
+?>
