@@ -91,6 +91,7 @@ function tick()
 }
 
 var mouseDown = false;
+var mouseButton2 = false;
 var lastMouseX = null;
 var lastMouseY = null;
 
@@ -100,6 +101,14 @@ var lastMouseY = null;
 function handleMouseDown(event)
 {
     mouseDown = true;
+
+    if(event.which == 2)//middle button mouse
+    {
+        mouseButton2 = true;
+    }
+    else
+        mouseButton2 = false;
+
     lastMouseX = event.clientX;
     lastMouseY = event.clientY;
 }
@@ -107,6 +116,7 @@ function handleMouseDown(event)
 function handleMouseUp(event)
 {
     mouseDown = false;
+    mouseButton2 = false;
 }
 
 function handleMouseMove(event)
@@ -115,22 +125,44 @@ function handleMouseMove(event)
     {
         return;
     }
+
     var newX = event.clientX;
     var newY = event.clientY;
 
     var deltaX = newX - lastMouseX;
-    var newRotationMatrix = mat4.create();
-    mat4.identity(newRotationMatrix);
-    mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
-
     var deltaY = newY - lastMouseY;
-    mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
 
-    mat4.multiply(newRotationMatrix, viewMat, viewMat);
+    var transformedMatrix = mat4.create();
+    mat4.identity(transformedMatrix);
+
+    if(!mouseButton2)
+    {
+        mat4.rotate(transformedMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+        mat4.rotate(transformedMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+    }
+    else
+    {
+        mat4.translate(transformedMatrix, [deltaX/100, -deltaY/100, 0]);
+    }
+
+    mat4.multiply(transformedMatrix, viewMat, viewMat);
+
     viewTransform.setMatrix(viewMat);
     lastMouseX = newX;
     lastMouseY = newY;
 }
+
+function handleKeyDown(event)
+{
+    if(event.which == 82)//key R for reset
+    {
+        scale = 1;
+        mat4.identity(viewMat);
+        mat4.identity(scaleMat);
+    }
+}
+
 var scale = 1;
 
 function scaleScene(e)
@@ -194,6 +226,7 @@ function webGLStart()
     canvas.onmousedown = handleMouseDown;
     document.onmouseup = handleMouseUp;
     document.onmousemove = handleMouseMove;
+    document.onkeydown = handleKeyDown;
     var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel"; //FF doesn't recognize mousewheel as of FF3.x
 
     if (canvas.attachEvent) //if IE (and Opera depending on user setting)
