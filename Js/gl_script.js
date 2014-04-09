@@ -91,7 +91,7 @@ function tick()
 }
 
 var mouseDown = false;
-var mouseButton2 = false;
+var mouseButtonRight = false;
 var lastMouseX = null;
 var lastMouseY = null;
 
@@ -102,12 +102,12 @@ function handleMouseDown(event)
 {
     mouseDown = true;
 
-    if(event.which == 2)//middle button mouse
+    if(event.which == 3)//right button mouse
     {
-        mouseButton2 = true;
+        mouseButtonRight = true;
     }
     else
-        mouseButton2 = false;
+        mouseButtonRight = false;
 
     lastMouseX = event.clientX;
     lastMouseY = event.clientY;
@@ -116,7 +116,7 @@ function handleMouseDown(event)
 function handleMouseUp(event)
 {
     mouseDown = false;
-    mouseButton2 = false;
+    mouseButtonRight = false;
 }
 
 function handleMouseMove(event)
@@ -135,7 +135,7 @@ function handleMouseMove(event)
     var transformedMatrix = mat4.create();
     mat4.identity(transformedMatrix);
 
-    if(!mouseButton2)
+    if(!mouseButtonRight)
     {
         mat4.rotate(transformedMatrix, degToRad(deltaX / 10), [0, 1, 0]);
 
@@ -143,7 +143,7 @@ function handleMouseMove(event)
     }
     else
     {
-        mat4.translate(transformedMatrix, [deltaX/100, -deltaY/100, 0]);
+        mat4.translate(transformedMatrix, [deltaX/(50*scale), -deltaY/(50*scale), 0]);
     }
 
     mat4.multiply(transformedMatrix, viewMat, viewMat);
