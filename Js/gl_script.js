@@ -12,10 +12,10 @@ function initGL(canvas)
     {
         alert(e);
     }
+
     if (!gl)
-    {
         alert("Could not initialise WebGL, sorry :-(");
-    }
+
 }
 
 var objStr;

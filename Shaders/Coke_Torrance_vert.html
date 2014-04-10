@@ -9,7 +9,8 @@
     varying vec3 vMvPosition;
     varying vec2 vTextureCoord;
 
-    void main(void) {
+    void main(void)
+    {
         vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
         vMvPosition = mvPosition.xyz;
         gl_Position = uPMatrix * mvPosition;

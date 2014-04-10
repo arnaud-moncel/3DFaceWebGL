@@ -19,36 +19,40 @@
     uniform sampler2D uSpecular;
     uniform float uSpecPow;
 
-    float getColour(vec3 normal, vec3 lightDir, float col) {
-      vec3 transformedNormal = normalize(uNMatrix * normal);
+    float getColour(vec3 normal, vec3 lightDir, float col)
+    {
+        vec3 transformedNormal = normalize(uNMatrix * normal);
         float directionalLightWeighting = col*max(dot(transformedNormal.xyz, lightDir), 0.0);
         return directionalLightWeighting;
     }
 
-    vec3 getSpecular(vec3 normal, vec3 lightDir, vec3 viewDir, float specPow, vec3 col) {
-      vec3 transformedNormal =normalize(uNMatrix * normal);
-      vec3 reflectDir = normalize(reflect(lightDir, transformedNormal));
-      float specAngle = max(dot(reflectDir, viewDir), 0.0);//max(dot(transformedNormal.xyz, lightDir), 0.0);//
-      float specular = pow(specAngle, specPow);
+    vec3 getSpecular(vec3 normal, vec3 lightDir, vec3 viewDir, float specPow, vec3 col)
+    {
+        vec3 transformedNormal =normalize(uNMatrix * normal);
+        vec3 reflectDir = normalize(reflect(lightDir, transformedNormal));
+        float specAngle = max(dot(reflectDir, viewDir), 0.0);//max(dot(transformedNormal.xyz, lightDir), 0.0);//
+        float specular = pow(specAngle, specPow);
         return vec3(specular)*col;
     }
 
-    vec3 adjustNormal(vec4 normal) {
-       normal.x=normal.x*2.0-1.0;
-       normal.y=normal.y*2.0-1.0;
-       normal.z=normal.z*2.0-1.0;
-       return normalize(normal.xyz);
+    vec3 adjustNormal(vec4 normal)
+    {
+        normal.x=normal.x*2.0-1.0;
+        normal.y=normal.y*2.0-1.0;
+        normal.z=normal.z*2.0-1.0;
+        return normalize(normal.xyz);
     }
 
-    void main(void) {
+    void main(void)
+    {
         vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
         vec4 specColor = texture2D(uSpecular, vec2(vTextureCoord.s, vTextureCoord.t));
         vec3 redNormal = adjustNormal(texture2D(uRedNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
-         vec3 greenNormal =  adjustNormal(texture2D(uGreenNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
-         vec3 blueNormal =  adjustNormal(texture2D(uBlueNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
-         vec3 specNormal =  adjustNormal(texture2D(uSpecNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
-         vec3 lightDirection = normalize(uPointLightingLocation - vMvPosition);
-       // vec3 lightDirection = vec3(0, 0, 1);
+        vec3 greenNormal =  adjustNormal(texture2D(uGreenNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
+        vec3 blueNormal =  adjustNormal(texture2D(uBlueNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
+        vec3 specNormal =  adjustNormal(texture2D(uSpecNormals, vec2(vTextureCoord.s, vTextureCoord.t)));
+        vec3 lightDirection = normalize(uPointLightingLocation - vMvPosition);
+        // vec3 lightDirection = vec3(0, 0, 1);
         float diffRed = getColour(redNormal, lightDirection, textureColor.r)*uPointLightingColor.r;
         float diffGreen = getColour(greenNormal, lightDirection, textureColor.g)*uPointLightingColor.g;
         float diffBlue = getColour(blueNormal, lightDirection, textureColor.b)*uPointLightingColor.b;

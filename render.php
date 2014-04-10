@@ -23,7 +23,7 @@
     function resize()
     {
         var x = document.body.clientWidth;
-        var pos = (x/2)-250;
+        var pos = (x/2)-document.getElementById("canvas").width/2;
 
         document.getElementById("canvas").style.marginLeft = pos+"px";
     }
