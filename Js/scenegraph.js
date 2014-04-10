@@ -58,8 +58,9 @@
         shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
         gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
-        shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
-        gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+
+        /*shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+        gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);*/
 
         shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
         shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
@@ -69,6 +70,7 @@
         shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
         shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
         shaderProgram.pointLightingColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingColor");
+
         return shaderProgram;
     }
 
@@ -144,7 +146,7 @@ Group.prototype.draw = function(gl) {
 }
 
 
-    function Transform(mat) {
+function Transform(mat) {
 	this.mat = mat;
     }
     
@@ -269,11 +271,11 @@ function createSphere(gl) {
 	}
     }
     
-    sphereVertexNormalBuffer = gl.createBuffer();
+    /*sphereVertexNormalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalData), gl.STATIC_DRAW);
     sphereVertexNormalBuffer.itemSize = 3;
-    sphereVertexNormalBuffer.numItems = normalData.length / 3;
+    sphereVertexNormalBuffer.numItems = normalData.length / 3;*/
     
     sphereVertexTextureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexTextureCoordBuffer);
@@ -307,8 +309,8 @@ Sphere.prototype.draw = function(gl) {
     gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexTextureCoordBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, sphereVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, sphereVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    /*gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, sphereVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);*/
     
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereVertexIndexBuffer);
     setMatrixUniforms();
@@ -316,7 +318,7 @@ Sphere.prototype.draw = function(gl) {
     mvPopMatrix();
 }
 
-function Box(gl, size) {
+/*function Box(gl, size) {
         this.size = size;
         this.cubeVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
@@ -459,10 +461,10 @@ function Box(gl, size) {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
         this.cubeVertexIndexBuffer.itemSize = 1;
         this.cubeVertexIndexBuffer.numItems = 36;
-    }
+    }*/
 
 
-Box.prototype.draw = function(gl) {
+/*Box.prototype.draw = function(gl) {
     mvPushMatrix();
     mat4.scale(mvMatrix, [this.size, this.size, this.size]);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
@@ -478,7 +480,7 @@ Box.prototype.draw = function(gl) {
     setMatrixUniforms();
     gl.drawElements(gl.TRIANGLES, this.cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     mvPopMatrix();
-}
+}*/
 
 
 
@@ -723,7 +725,7 @@ function Obj(gl, text, size)
              console.log( "ObjLoader: Unhandled line " + line );
         }
     }
-  
+
     normals = fixIndices(vertexIndices, normalIndices, normals, 3);
     uvs = fixIndices(vertexIndices, uvIndices, uvs, 2);
 
@@ -734,12 +736,12 @@ function Obj(gl, text, size)
     this.cubeVertexPositionBuffer.itemSize = 3;
     this.cubeVertexPositionBuffer.numItems = vertices.length/3;
 
-    this.cubeVertexNormalBuffer = gl.createBuffer();
+    /*this.cubeVertexNormalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
     this.cubeVertexNormalBuffer.itemSize = 3;
-    this.cubeVertexNormalBuffer.numItems = normals.length/3;
+    this.cubeVertexNormalBuffer.numItems = normals.length/3;*/
     this.cubeVertexTextureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
 
@@ -753,7 +755,6 @@ function Obj(gl, text, size)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
     this.cubeVertexIndexBuffer.itemSize = 1;
     this.cubeVertexIndexBuffer.numItems = vertexIndices.length;
-        
 }
 
 
@@ -766,8 +767,8 @@ Obj.prototype.draw = function(gl) {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, this.cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+   /* gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, this.cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);*/
     
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
     setMatrixUniforms();

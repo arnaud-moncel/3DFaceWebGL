@@ -4,7 +4,7 @@ function initGL(canvas)
 {
     try
     {
-        gl = canvas.getContext("experimental-webgl");
+        gl = canvas.getContext("experimental-webgl") || canvas.getContext("webgl");
         gl.viewportWidth = canvas.width;
         gl.viewportHeight = canvas.height;
     }
@@ -63,17 +63,17 @@ function createScene()
     faceGroup = new Group();
     var dir = document.getElementById("directory").value;
 
-    faceTexture = new Texture("./Mesh/"+dir+"/shader/diff_texture.jpg", gl.TEXTURE0);
+    faceTexture = new Texture("./Mesh/"+dir+"/shader/diff_texture.bmp", gl.TEXTURE0);
     faceGroup.addLeaf(faceTexture);
-    faceRedNormals = new Texture("./Mesh/"+dir+"/shader/diff_normal_r.jpg", gl.TEXTURE1);
+    faceRedNormals = new Texture("./Mesh/"+dir+"/shader/diff_normal_r.bmp", gl.TEXTURE1);
     faceGroup.addLeaf(faceRedNormals);
-    faceGreenNormals = new Texture("./Mesh/"+dir+"/shader/diff_normal_g.jpg", gl.TEXTURE2);
+    faceGreenNormals = new Texture("./Mesh/"+dir+"/shader/diff_normal_g.bmp", gl.TEXTURE2);
     faceGroup.addLeaf(faceGreenNormals);
-    faceBlueNormals = new Texture("./Mesh/"+dir+"/shader/diff_normal_b.jpg", gl.TEXTURE3);
+    faceBlueNormals = new Texture("./Mesh/"+dir+"/shader/diff_normal_b.bmp", gl.TEXTURE3);
     faceGroup.addLeaf(faceBlueNormals);
-    faceSpecNormals = new Texture("./Mesh/"+dir+"/shader/spec_normal.jpg", gl.TEXTURE4);
+    faceSpecNormals = new Texture("./Mesh/"+dir+"/shader/spec_normal.bmp", gl.TEXTURE4);
     faceGroup.addLeaf(faceSpecNormals);
-    faceSpecular = new Texture("./Mesh/"+dir+"/shader/spec_texture.jpg", gl.TEXTURE5);
+    faceSpecular = new Texture("./Mesh/"+dir+"/shader/spec_texture.bmp", gl.TEXTURE5);
     faceGroup.addLeaf(faceSpecular);
 
     face = new Obj(gl,objStr, 0.1);
