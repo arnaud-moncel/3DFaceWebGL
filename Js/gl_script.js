@@ -205,18 +205,31 @@ function webGLStart()
     initGL(canvas);
 
     var shaderProgram = initShaders(gl);
-    shaderProgram.redNormalsUniform = gl.getUniformLocation(shaderProgram, "uRedNormals");
+    shaderProgram.diffTextureUniform = gl.getUniformLocation(shaderProgram, "diffTexture");
+    gl.uniform1i(shaderProgram.diffTextureUniform, 0);
+    shaderProgram.redNormalsUniform = gl.getUniformLocation(shaderProgram, "redNormals");
     gl.uniform1i(shaderProgram.redNormalsUniform, 1);
-    shaderProgram.greenNormalsUniform = gl.getUniformLocation(shaderProgram, "uGreenNormals");
+    shaderProgram.greenNormalsUniform = gl.getUniformLocation(shaderProgram, "greenNormals");
     gl.uniform1i(shaderProgram.greenNormalsUniform, 2);
-    shaderProgram.blueNormalsUniform = gl.getUniformLocation(shaderProgram, "uBlueNormals");
+    shaderProgram.blueNormalsUniform = gl.getUniformLocation(shaderProgram, "blueNormals");
     gl.uniform1i(shaderProgram.blueNormalsUniform, 3);
-    shaderProgram.specNormalsUniform = gl.getUniformLocation(shaderProgram, "uSpecNormals");
+    shaderProgram.specNormalsUniform = gl.getUniformLocation(shaderProgram, "specNormals");
     gl.uniform1i(shaderProgram.specNormalsUniform, 4);
-    shaderProgram.specularUniform = gl.getUniformLocation(shaderProgram, "uSpecular");
+    shaderProgram.specularUniform = gl.getUniformLocation(shaderProgram, "specTexture");
     gl.uniform1i(shaderProgram.specularUniform, 5);
-    shaderProgram.specularPower = gl.getUniformLocation(shaderProgram, "uSpecPow");
-    gl.uniform1f(shaderProgram.specularPower, 16.0);
+    /*shaderProgram.specularPower = gl.getUniformLocation(shaderProgram, "uSpecPow");
+    gl.uniform1f(shaderProgram.specularPower, 16.0);*/
+
+    var enabledLight = [1, 1, 1, 1, 0, 0, 0, 0];
+    shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
+    gl.uniform1iv(shaderProgram.enabledLights, enabledLight);
+
+    shaderProgram.roughness = gl.getUniformLocation(shaderProgram, "roughness");
+    gl.uniform1f(shaderProgram.roughness, 0.6);
+
+    shaderProgram.indiceOfRefraction = gl.getUniformLocation(shaderProgram, "indiceOfRefraction");
+    gl.uniform1f(shaderProgram.indiceOfRefraction, 0.4);
+
 
     createScene();
 

@@ -64,14 +64,13 @@ function initShaders(gl)
     shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
     gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
-
-    /*shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
-    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);*/
+    shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
     shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-    shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+    //shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
     shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
     shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
     shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
@@ -96,7 +95,7 @@ function handleLoadedTexture(texture)
 
 var mvMatrix = mat4.create();
 var mvMatrixStack = [];
-var textureStack = [];
+//var textureStack = [];
 var pMatrix = mat4.create();
 
 function mvPushMatrix()
@@ -300,11 +299,11 @@ function createSphere(gl) {
         }
     }
     
-    /*sphereVertexNormalBuffer = gl.createBuffer();
+    sphereVertexNormalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalData), gl.STATIC_DRAW);
     sphereVertexNormalBuffer.itemSize = 3;
-    sphereVertexNormalBuffer.numItems = normalData.length / 3;*/
+    sphereVertexNormalBuffer.numItems = normalData.length / 3;
     
     sphereVertexTextureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexTextureCoordBuffer);
@@ -340,8 +339,8 @@ Sphere.prototype.draw = function(gl)
     gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexTextureCoordBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, sphereVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
-    /*gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, sphereVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);*/
+    gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, sphereVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereVertexIndexBuffer);
     setMatrixUniforms();
@@ -543,8 +542,8 @@ Scene.prototype.draw = function(gl)
             
     var lightPos = vec3.create();
     lightPos[0]= parseFloat(document.getElementById("lightPositionX").value);
-    lightPos[1]=     parseFloat(document.getElementById("lightPositionY").value);
-    lightPos[2]=     parseFloat(document.getElementById("lightPositionZ").value);
+    lightPos[1]= parseFloat(document.getElementById("lightPositionY").value);
+    lightPos[2]= parseFloat(document.getElementById("lightPositionZ").value);
     lightPos = mat4.multiplyVec3(mvMatrix, lightPos, lightPos);
 
     var i;
@@ -771,12 +770,12 @@ function Obj(gl, text, size)
     this.cubeVertexPositionBuffer.itemSize = 3;
     this.cubeVertexPositionBuffer.numItems = vertices.length/3;
 
-    /*this.cubeVertexNormalBuffer = gl.createBuffer();
+    this.cubeVertexNormalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
     this.cubeVertexNormalBuffer.itemSize = 3;
-    this.cubeVertexNormalBuffer.numItems = normals.length/3;*/
+    this.cubeVertexNormalBuffer.numItems = normals.length/3;
 
     this.cubeVertexTextureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
@@ -805,8 +804,8 @@ Obj.prototype.draw = function(gl)
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, this.cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
-   /* gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, this.cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);*/
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, this.cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
     
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
     setMatrixUniforms();

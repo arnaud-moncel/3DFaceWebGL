@@ -12,8 +12,8 @@
 <script type="text/javascript" src="Js/webgl-utils.js"></script>
 <script type="text/javascript" src="Js/scenegraph.js"></script>
 <?php
-    include "Shaders/Coke_Torrance_frag.html";
-    include "Shaders/Coke_Torrance_vert.html";
+    include "Shaders/Cook_Torrance_frag.html";
+    include "Shaders/Cook_Torrance_vert.html";
 ?>
 <script type="text/javascript" src="Js/gl_script.js"></script>
 
@@ -50,7 +50,7 @@
                 echo ("<p<font color='red'>Couldn't open directory</font></p>");
          }
          else
-            echo("<p><font color='red'>No file selected</font></p>");
+            echo("<p style='text-align: center;'><font color='red'>No file selected</font></p>");
     ?>
 
     <canvas id="canvas" height="500" width="500"></canvas><br><br>
@@ -69,9 +69,9 @@
     <input id="pointG" type="hidden" value="0.8" />
     <input id="pointB" type="hidden" value="0.8" />
 
-    <input id="ambientR" type="hidden" value="0.2" />
-    <input id="ambientG" type="hidden" value="0.2" />
-    <input id="ambientB" type="hidden" value="0.2" />
+    <input id="ambientR" type="hidden" value="0.15" />
+    <input id="ambientG" type="hidden" value="0.15" />
+    <input id="ambientB" type="hidden" value="0.15" />
 
     <br><p style="text-align:center"><a href="index.php">Return</a></p>
 

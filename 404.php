@@ -7,7 +7,7 @@
  */
     include "header.html";
 
-    echo("<h1>404 Not Found</h1>");
+    echo("<h1 style='text-align: center;'>404 Not Found</h1>");
     header("Refresh: 2; url=index.php");
 
     include "footer.html";
