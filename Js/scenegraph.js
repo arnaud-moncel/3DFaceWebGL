@@ -70,11 +70,6 @@ function initShaders(gl)
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
     shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-    //shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-    shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
-    shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-    shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
-    shaderProgram.pointLightingColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingColor");
 
     return shaderProgram;
 }
@@ -533,41 +528,6 @@ Scene.prototype.draw = function(gl)
     mat4.identity(mvMatrix);
     mat4.translate(mvMatrix, [0,0,-20]);
 
-    gl.uniform3f(
-        shaderProgram.ambientColorUniform,
-        parseFloat(document.getElementById("ambientR").value),
-        parseFloat(document.getElementById("ambientG").value),
-        parseFloat(document.getElementById("ambientB").value)
-    );
-            
-    var lightPos = vec3.create();
-    lightPos[0]= parseFloat(document.getElementById("lightPositionX").value);
-    lightPos[1]= parseFloat(document.getElementById("lightPositionY").value);
-    lightPos[2]= parseFloat(document.getElementById("lightPositionZ").value);
-    lightPos = mat4.multiplyVec3(mvMatrix, lightPos, lightPos);
-
-    var i;
-    for (i=0; i<this.leaves.length; i++)
-    {
-      if (this.leaves[i] instanceof Transform)
-        lightPos = mat4.multiplyVec3(this.leaves[i].mat, lightPos, lightPos);
-
-    }
-
-    gl.uniform3f(
-        shaderProgram.pointLightingLocationUniform, lightPos[0], lightPos[1], lightPos[2]
-
-    );
-
-    gl.uniform3f(
-        shaderProgram.pointLightingColorUniform,
-        parseFloat(document.getElementById("pointR").value),
-        parseFloat(document.getElementById("pointG").value),
-        parseFloat(document.getElementById("pointB").value)
-    );
-
-
-        
 	Group.prototype.draw.call(this, gl);
 }
 

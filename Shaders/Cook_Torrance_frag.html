@@ -3,24 +3,38 @@
 	    precision mediump float;
 	#endif
 
+    uniform mat3 uNMatrix;
+
+    //textures
     uniform sampler2D diffTexture;
-    uniform sampler2D specNormals;
     uniform sampler2D redNormals;
     uniform sampler2D greenNormals;
     uniform sampler2D blueNormals;
+    uniform sampler2D specNormals;
     uniform sampler2D specTexture;
-    uniform int enabledLights[8];
+
+    //other information
     uniform float roughness;
     uniform float indiceOfRefraction;
+    uniform vec3 ecPosition;
 
-    /*uniform int enableSelection;
-    uniform float selection[4];*/
+    //light information
+    uniform int enabledLights[8];
+    uniform vec3 lightPos[8];
+    uniform vec3 lightDirection[8];
+    uniform vec3 lightAmbient[8];
+    uniform vec3 lightDiffuse[8];
+    uniform vec3 lightSpecular[8];
+    uniform float lightCutoff[8];
 
+    //material information
+    uniform vec3 materialAmbient;
+    uniform vec3 materialDiffuse;
+    uniform vec3 materialSpecular;
+
+    //varying variables for vs
     varying vec2 vTextureCoord;
-    varying vec3 lightsVec[8];
-    //varying vec3 ecPosition;
     varying vec3 normal;
-    //varying mat3 tbn;
 
     varying vec4 position;
 
@@ -40,8 +54,7 @@
     {
         float base = 1.0-VdotH;
         float exponential = pow(base, 5.0);
-        float result = exponential + f * (1.0 - exponential);
-        return 1.0 < result ? 1.0 : result;
+        return min(1.0,(exponential + f * (1.0 - exponential)));
     }
 
 
@@ -121,7 +134,6 @@
         cos_beta = dot(Vf,Hn);
 
         D = beckmann( cos_alpha, r );
-        //G = geomasking2(cos_theta_i, cos_theta_r, cos_beta, cos_alpha);
         G = geomasking( cos_theta_r, cos_alpha, cos_theta_i, cos_beta );
         F = fresnelReflectance( cos_beta, ior );
 
@@ -132,29 +144,24 @@
 
     void main(void)
     {
-        //comment gl_normal
         vec3 snorm = texture2D(specNormals, vTextureCoord.st).rgb;
         snorm  = snorm * 2.0 - 1.0;
-        //snorm = gl_NormalMatrix * snorm;
-        //snorm = tbn * snorm;
+        snorm = uNMatrix * snorm;
         snorm = normalize(snorm);
 
         vec3 rnorm = texture2D(redNormals, vTextureCoord.st).rgb;
         rnorm  = rnorm * 2.0 - 1.0;
-        //rnorm = gl_NormalMatrix * rnorm;
-        //rnorm = tbn * rnorm;
+        rnorm = uNMatrix * rnorm;
         rnorm = normalize(rnorm);
 
         vec3 gnorm = texture2D(greenNormals, vTextureCoord.st).rgb;
         gnorm  = gnorm * 2.0 - 1.0;
-        //gnorm = gl_NormalMatrix * gnorm;
-        //gnorm = tbn * gnorm;
+        gnorm = uNMatrix * gnorm;
         gnorm = normalize(gnorm);
 
         vec3 bnorm = texture2D(blueNormals, vTextureCoord.st).rgb;
         //bnorm  = bnorm * 2.0 - 1.0;
-        //bnorm = gl_NormalMatrix * bnorm;
-        //bnorm = tbn * bnorm;
+        bnorm = uNMatrix * bnorm;
         bnorm = normalize(bnorm);
 
         vec3  texColor =  texture2D(diffTexture, vTextureCoord.st).rgb;
@@ -167,7 +174,7 @@
         vec3 reflectVec[8];
         float spec[8];
         vec3 diffuseCol[8];
-        vec3 viewVec = normalize(-vec3(250.0, 250.0, 200.0));/*(-ecPosition)*/
+        vec3 viewVec = normalize(-ecPosition);
 
         vec3 specComponent = vec3(0,0,0) ;
         vec3 diffComponent = vec3(0,0,0) ;
@@ -178,85 +185,46 @@
         {
             if( enabledLights[i] == 1)
             {
-                //reflectVec[i] = reflect(lightsVec[i], snorm);
-                //reflectVec[i] = normalize(reflectVec[i]);
-                //spec[i] = min(max(dot(reflectVec[i], viewVec), 0.0),1.0);
+                spec[i]=specular(lightPos[i], viewVec, normal , snorm, roughness, indiceOfRefraction);
 
-                //vec3 halfVector = normalize( lightsVec[i] + viewVec );
-                //spec[i] = min(max(dot(snorm, halfVector), 0.0),1.0);
+                diffuseCol[i].r   = diffuse(lightPos[i], viewVec , normal, rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
+                diffuseCol[i].g   = diffuse(lightPos[i], viewVec , normal, gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
+                diffuseCol[i].b   = diffuse(lightPos[i], viewVec , normal, bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
 
-                spec[i]=specular(lightsVec[i], viewVec, normal , snorm, roughness, indiceOfRefraction);
-
-
-                //spec[i] = pow(spec[i], gl_FrontMaterial.shininess);
-
-                diffuseCol[i].r   = diffuse(lightsVec[i], viewVec , normal, rnorm);//min(max(dot(-lightsVec[i], rnorm), 0.0),1.0);
-                diffuseCol[i].g   = diffuse(lightsVec[i], viewVec , normal, gnorm);//min(max(dot(-lightsVec[i], gnorm), 0.0),1.0);
-                diffuseCol[i].b   = diffuse(lightsVec[i], viewVec , normal, bnorm);//min(max(dot(-lightsVec[i], bnorm), 0.0),1.0);
-
-                //comment
-                //specComponent += spec[i] * gl_LightSource[i].specular.rgb * gl_FrontMaterial.specular.rgb /* texColor.rgb */* specTexColor.rgb ;
-                //diffComponent +=  diffuseCol[i].rgb * gl_LightSource[i].diffuse.rgb * gl_FrontMaterial.diffuse.rgb* texColor.rgb ;
-                //ambComponent += gl_LightSource[i].ambient.rgb * gl_FrontMaterial.ambient.rgb * texColor.rgb;
+                specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
+                diffComponent +=  diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
+                ambComponent += lightAmbient[i] * materialAmbient * texColor.rgb;
 
                 nbLights++;
             }
         }
 
-        //comment
-        const int i = 7;
-        /*specComponent /= nbLights;
+        const int i = 0;
+        specComponent /= nbLights;
         diffComponent /= nbLights;
-        specComponent /= nbLights;*/
+        specComponent /= nbLights;
 
         //The scanning light
 
-        //comment
-        /*float spotDot = dot(-lightsVec[i],normalize(gl_LightSource[i].spotDirection));
+        float spotDot = dot(-lightPos[i],normalize(lightDirection[i]));
         float cosDot = acos(spotDot);
-        float spotCutoff = gl_LightSource[i].spotCutoff;*/
-        if(/*cosDot < spotCutoff &&*/ enabledLights[i] == 1)
+        float spotCutoff = lightCutoff[i];
+        if(cosDot < spotCutoff && enabledLights[i] == 1)
         {
-            //float dist = length(lightsVec[i]);
-            //float attenuation = 1.0;// / ( dist * gl_LightSource[i].linearAttenuation +
-                    //    dist * dist * gl_LightSource[i].quadraticAttenuation );
+            spec[i] = specular(lightPos[i], viewVec, normal , snorm, roughness, indiceOfRefraction);
 
-            //reflectVec[i] = reflect(-lightsVec[i], snorm);
-            //reflectVec[i] = normalize(reflectVec[i]);
-            //spec[i] = min(max(dot(reflectVec[i], viewVec), 0.0),1.0);
+            diffuseCol[i].r   = max(dot(-lightPos[i], rnorm), 0.0);
+            diffuseCol[i].g   = max(dot(-lightPos[i], gnorm), 0.0);
+            diffuseCol[i].b   = max(dot(-lightPos[i], bnorm), 0.0);
 
-
-            spec[i] = specular(lightsVec[i], viewVec, normal , snorm, roughness, indiceOfRefraction);
-
-            //spec[i] = pow(spec[i], gl_FrontMaterial.shininess);
-
-
-            diffuseCol[i].r   = max(dot(-lightsVec[i], rnorm), 0.0);
-            diffuseCol[i].g   = max(dot(-lightsVec[i], gnorm), 0.0);
-            diffuseCol[i].b   = max(dot(-lightsVec[i], bnorm), 0.0);
-
-            //comment
-            //specComponent += spec[i] * gl_LightSource[i].specular.rgb * gl_FrontMaterial.specular.rgb /* texColor.rgb*/ * specTexColor.rgb ;
-            //diffComponent += diffuseCol[i].rgb * gl_LightSource[i].diffuse.rgb* gl_FrontMaterial.diffuse.rgb* texColor.rgb  ;
-            //ambComponent += gl_LightSource[i].ambient.rgb * gl_FrontMaterial.ambient.rgb   ;
+            specComponent += spec[i] * lightSpecular[i] * lightSpecular[i] * specTexColor.rgb;
+            diffComponent += diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
+            ambComponent += lightAmbient[i] * materialAmbient;
         }
 
-        //LightIntensity = specComponent + diffComponent + ambComponent ;// specComponent;//+diffComponent+ambComponent;//mix( specComponent.rgb , diffComponent, ambComponent.rgb + gl_FrontMaterial.emission.rgb);
-        //comment
-        //LightIntensity =  0.5*diffComponent + 0.5*specComponent + ambComponent  ;
-
-        LightIntensity = vec3(0.5, 0.5, 0.5);
+        LightIntensity =  0.5*diffComponent + 0.5*specComponent + ambComponent;
 
         LightIntensity = pow(LightIntensity, vec3(1.0/2.2));
-
-        /*if(enableSelection == 1)
-        {
-            if(vTextureCoord.s < selection[0] || vTextureCoord.s > (selection[0]+selection[2])
-            || (1.0-vTextureCoord.t) <  selection[1] || (1.0-vTextureCoord.t) > (selection[1]+selection[3] ))
-            {
-                LightIntensity = 0.0 * LightIntensity;
-            }
-        }*/
 
         gl_FragColor = vec4 (LightIntensity, 1.0);
     }

@@ -194,17 +194,9 @@ function scaleScene(e)
     return true;
 }
 
-
-
-function webGLStart()
+function setUniform(gl, shaderProgram)
 {
-    var dir = document.getElementById("directory").value;
-    loadObj("./Mesh/"+dir+"/mesh_mid.obj");
-
-    var canvas = document.getElementById("canvas");
-    initGL(canvas);
-
-    var shaderProgram = initShaders(gl);
+    //textures
     shaderProgram.diffTextureUniform = gl.getUniformLocation(shaderProgram, "diffTexture");
     gl.uniform1i(shaderProgram.diffTextureUniform, 0);
     shaderProgram.redNormalsUniform = gl.getUniformLocation(shaderProgram, "redNormals");
@@ -217,19 +209,85 @@ function webGLStart()
     gl.uniform1i(shaderProgram.specNormalsUniform, 4);
     shaderProgram.specularUniform = gl.getUniformLocation(shaderProgram, "specTexture");
     gl.uniform1i(shaderProgram.specularUniform, 5);
-    /*shaderProgram.specularPower = gl.getUniformLocation(shaderProgram, "uSpecPow");
-    gl.uniform1f(shaderProgram.specularPower, 16.0);*/
 
-    var enabledLight = [1, 1, 1, 1, 0, 0, 0, 0];
+
+    //other information
+    shaderProgram.roughness = gl.getUniformLocation(shaderProgram, "roughness");
+    gl.uniform1f(shaderProgram.roughness, 0.7);
+    shaderProgram.indiceOfRefraction = gl.getUniformLocation(shaderProgram, "indiceOfRefraction");
+    gl.uniform1f(shaderProgram.indiceOfRefraction, 0.8);
+
+    var ecPosition = [250.0, 250.0, 10.0];
+    shaderProgram.ecPosition = gl.getUniformLocation(shaderProgram, "ecPosition");
+    gl.uniform3fv(shaderProgram.ecPosition, ecPosition);
+
+
+    //light information
+    var enabledLight = [1, 0, 0, 0, 0, 0, 0, 0];
     shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
     gl.uniform1iv(shaderProgram.enabledLights, enabledLight);
 
-    shaderProgram.roughness = gl.getUniformLocation(shaderProgram, "roughness");
-    gl.uniform1f(shaderProgram.roughness, 0.6);
+    var lightPos = [0.0, 0.0, 250.0,
+                    500.0, 0.0, 200.0,
+                    250.0, 500.0, 200.0];
+    shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
+    gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    shaderProgram.indiceOfRefraction = gl.getUniformLocation(shaderProgram, "indiceOfRefraction");
-    gl.uniform1f(shaderProgram.indiceOfRefraction, 0.4);
+    var lightDirection = [0.0, 0.0, -50.0,
+                          250.0, 250.0, -50.0,
+                          250.0, 250.0, -50.0];
+    shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
+    gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 
+    var lightAmbient = [0.15, 0.15, 0.15,
+                        0.15, 0.15, 0.15,
+                        0.15, 0.15, 0.15];
+    shaderProgram.lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
+    gl.uniform3fv(shaderProgram.lightAmbient, lightAmbient);
+
+    var lightDiffuse = [0.4, 0.4, 0.4,
+                        0.4, 0.4, 0.4,
+                        0.4, 0.4, 0.4];
+    shaderProgram.lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
+    gl.uniform3fv(shaderProgram.lightDiffuse, lightDiffuse);
+
+    var lightSpecular = [0.4, 0.4, 0.4,
+                         0.4, 0.4, 0.4,
+                         0.4, 0.4, 0.4];
+    shaderProgram.lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
+    gl.uniform3fv(shaderProgram.lightSpecular, lightSpecular);
+
+    var lightCutoff = [90.0, 90.0, 20.0];
+    shaderProgram.lightCutoff = gl.getUniformLocation(shaderProgram, "lightCutoff");
+    gl.uniform1fv(shaderProgram.lightCutoff, lightCutoff);
+
+
+    //material information
+    var materialAmbient = [0.7, 0.7, 0.7];
+    shaderProgram.materialAmbient = gl.getUniformLocation(shaderProgram, "materialAmbient");
+    gl.uniform3fv(shaderProgram.materialAmbient, materialAmbient);
+
+    var materialDiffuse = [0.7, 0.7, 0.7];
+    shaderProgram.materialDiffuse = gl.getUniformLocation(shaderProgram, "materialDiffuse");
+    gl.uniform3fv(shaderProgram.materialDiffuse, materialDiffuse);
+
+    var materialSpecular = [0.4, 0.4, 0.4];
+    shaderProgram.materialSpecular = gl.getUniformLocation(shaderProgram, "materialSpecular");
+    gl.uniform3fv(shaderProgram.materialSpecular, materialSpecular);
+}
+
+
+function webGLStart()
+{
+    var dir = document.getElementById("directory").value;
+    loadObj("./Mesh/"+dir+"/mesh.obj");
+
+    var canvas = document.getElementById("canvas");
+    initGL(canvas);
+
+    var shaderProgram = initShaders(gl);
+
+    setUniform(gl, shaderProgram);
 
     createScene();
 

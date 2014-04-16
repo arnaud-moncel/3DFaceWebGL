@@ -61,18 +61,6 @@
 
     <input id="directory" type="hidden" value="<?php if(isset($_GET["directory"])) echo($_GET["directory"]); ?>">
 
-    <input id="lightPositionX" type="hidden" value="700.0" />
-    <input id="lightPositionY" type="hidden" value="700.0" />
-    <input id="lightPositionZ" type="hidden" value="250.0" />
-
-    <input id="pointR" type="hidden" value="0.8" />
-    <input id="pointG" type="hidden" value="0.8" />
-    <input id="pointB" type="hidden" value="0.8" />
-
-    <input id="ambientR" type="hidden" value="0.15" />
-    <input id="ambientG" type="hidden" value="0.15" />
-    <input id="ambientB" type="hidden" value="0.15" />
-
     <br><p style="text-align:center"><a href="index.php">Return</a></p>
 
  <?php

@@ -1,4 +1,8 @@
 <script id="shader-vs" type="x-shader/x-vertex">
+    #ifdef GL_ES
+	    precision mediump float;
+	#endif
+
     attribute vec3 aVertexPosition;
     attribute vec3 aVertexNormal;
     attribute vec2 aTextureCoord;
@@ -6,21 +10,14 @@
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
 
-    varying mediump vec2 vTextureCoord;
-    varying mediump vec3 lightsVec[8];
-   //varying mediump vec3 ecPosition;
-    varying mediump vec3 normal;
+    varying vec2 vTextureCoord;
+    varying vec3 normal;
 
-    varying mediump vec3 position;
+    varying vec3 position;
 
     void main(void)
     {
         vTextureCoord = aTextureCoord;
-        lightsVec[1] = vec3(0.0, 0.0, 200.0);
-        lightsVec[1] = vec3(500.0, 500.0, 200.0);
-        lightsVec[1] = vec3(0.0, 500.0, 200.0);
-        lightsVec[1] = vec3(500.0, 0.0, 200.0);
-        //ecPosition = vec3(250.0, 250.0, 200.0);
         normal = aVertexNormal;
 
         vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
