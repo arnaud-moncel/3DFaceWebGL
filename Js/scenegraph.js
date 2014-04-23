@@ -770,6 +770,8 @@ Obj.prototype.draw = function(gl)
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
     setMatrixUniforms();
 
+    setUniform(gl, shaderProgram);
+
     gl.drawElements(gl.TRIANGLES, this.cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
     mvPopMatrix();

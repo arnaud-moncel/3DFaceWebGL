@@ -45,7 +45,7 @@
         float m2 = r*r;
         float c2 = cosalpha*cosalpha;
 
-        res = (exp( (c2-1.0) / (c2*m2))) / ( c2*c2*m2);
+        res = (exp( (c2-1.0) / (c2*m2))) / (c2*c2*m2);
 
         return res;
     }
@@ -171,7 +171,7 @@
 
 
         vec3 LightIntensity;
-        vec3 reflectVec[8];
+        //vec3 reflectVec[8];
         float spec[8];
         vec3 diffuseCol[8];
         vec3 viewVec = normalize(-ecPosition);
@@ -193,18 +193,18 @@
 
                 specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
                 diffComponent +=  diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
-                ambComponent += lightAmbient[i] * materialAmbient * texColor.rgb;
+                ambComponent += lightAmbient[i] * materialAmbient /* texColor.rgb*/;
 
                 nbLights++;
             }
         }
 
-        const int i = 0;
         specComponent /= nbLights;
         diffComponent /= nbLights;
         specComponent /= nbLights;
 
         //The scanning light
+        const int i = 0;
 
         float spotDot = dot(-lightPos[i],normalize(lightDirection[i]));
         float cosDot = acos(spotDot);
@@ -217,7 +217,7 @@
             diffuseCol[i].g   = max(dot(-lightPos[i], gnorm), 0.0);
             diffuseCol[i].b   = max(dot(-lightPos[i], bnorm), 0.0);
 
-            specComponent += spec[i] * lightSpecular[i] * lightSpecular[i] * specTexColor.rgb;
+            specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
             diffComponent += diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
             ambComponent += lightAmbient[i] * materialAmbient;
         }
@@ -226,6 +226,7 @@
 
         LightIntensity = pow(LightIntensity, vec3(1.0/2.2));
 
-        gl_FragColor = vec4 (LightIntensity, 1.0);
+
+        gl_FragColor = vec4 (0.5*diffComponent + ambComponent + 0.5*specComponent, 1.0);
     }
 </script>

@@ -194,7 +194,7 @@ function scaleScene(e)
     return true;
 }
 
-function setUniform(gl, shaderProgram)
+function setTextures(gl, shaderProgram)
 {
     //textures
     shaderProgram.diffTextureUniform = gl.getUniformLocation(shaderProgram, "diffTexture");
@@ -209,15 +209,17 @@ function setUniform(gl, shaderProgram)
     gl.uniform1i(shaderProgram.specNormalsUniform, 4);
     shaderProgram.specularUniform = gl.getUniformLocation(shaderProgram, "specTexture");
     gl.uniform1i(shaderProgram.specularUniform, 5);
+}
 
-
+function setUniform(gl, shaderProgram)
+{
     //other information
     shaderProgram.roughness = gl.getUniformLocation(shaderProgram, "roughness");
-    gl.uniform1f(shaderProgram.roughness, 0.7);
+    gl.uniform1f(shaderProgram.roughness, 0.05);
     shaderProgram.indiceOfRefraction = gl.getUniformLocation(shaderProgram, "indiceOfRefraction");
-    gl.uniform1f(shaderProgram.indiceOfRefraction, 0.8);
+    gl.uniform1f(shaderProgram.indiceOfRefraction, 0.5);
 
-    var ecPosition = [250.0, 250.0, 10.0];
+    var ecPosition = [0.0, 0.0, 10.0];
     shaderProgram.ecPosition = gl.getUniformLocation(shaderProgram, "ecPosition");
     gl.uniform3fv(shaderProgram.ecPosition, ecPosition);
 
@@ -227,19 +229,19 @@ function setUniform(gl, shaderProgram)
     shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
     gl.uniform1iv(shaderProgram.enabledLights, enabledLight);
 
-    var lightPos = [0.0, 0.0, 250.0,
+    var lightPos = [parseFloat(document.getElementById("lightPosX").value), parseFloat(document.getElementById("lightPosY").value), parseFloat(document.getElementById("lightPosZ").value),
                     500.0, 0.0, 200.0,
                     250.0, 500.0, 200.0];
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    var lightDirection = [0.0, 0.0, -50.0,
+    var lightDirection = [0.0, 0.0, -50,
                           250.0, 250.0, -50.0,
                           250.0, 250.0, -50.0];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
     gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 
-    var lightAmbient = [0.15, 0.15, 0.15,
+    var lightAmbient = [0.5, 0.5, 0.5,
                         0.15, 0.15, 0.15,
                         0.15, 0.15, 0.15];
     shaderProgram.lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
@@ -257,17 +259,17 @@ function setUniform(gl, shaderProgram)
     shaderProgram.lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
     gl.uniform3fv(shaderProgram.lightSpecular, lightSpecular);
 
-    var lightCutoff = [90.0, 90.0, 20.0];
+    var lightCutoff = [0, 90.0, 20.0];
     shaderProgram.lightCutoff = gl.getUniformLocation(shaderProgram, "lightCutoff");
     gl.uniform1fv(shaderProgram.lightCutoff, lightCutoff);
 
 
     //material information
-    var materialAmbient = [0.7, 0.7, 0.7];
+    var materialAmbient = [0.4, 0.4, 0.4];
     shaderProgram.materialAmbient = gl.getUniformLocation(shaderProgram, "materialAmbient");
     gl.uniform3fv(shaderProgram.materialAmbient, materialAmbient);
 
-    var materialDiffuse = [0.7, 0.7, 0.7];
+    var materialDiffuse = [0.4, 0.4, 0.4];
     shaderProgram.materialDiffuse = gl.getUniformLocation(shaderProgram, "materialDiffuse");
     gl.uniform3fv(shaderProgram.materialDiffuse, materialDiffuse);
 
@@ -287,6 +289,7 @@ function webGLStart()
 
     var shaderProgram = initShaders(gl);
 
+    setTextures(gl, shaderProgram);
     setUniform(gl, shaderProgram);
 
     createScene();
