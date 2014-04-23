@@ -227,6 +227,6 @@
         LightIntensity = pow(LightIntensity, vec3(1.0/2.2));
 
 
-        gl_FragColor = vec4 (0.5*diffComponent + ambComponent + 0.5*specComponent, 1.0);
+        gl_FragColor = vec4 (LightIntensity, 1.0);
     }
 </script>
