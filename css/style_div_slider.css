@@ -1,0 +1,27 @@
+h4, p
+{
+    text-align:center;
+}
+
+fieldset
+{
+    text-align: center;
+    width: 500px;
+    margin: auto;
+}
+
+fieldset input
+{
+    border: 0 none;
+    color:#f6931f;
+    font-weight:bold;
+    width: 50px;
+    background: none;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+fieldset h3
+{
+    margin-top: 0;
+}

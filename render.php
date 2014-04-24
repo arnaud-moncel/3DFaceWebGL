@@ -35,58 +35,12 @@
 <link href="css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
 <script src="Js/jQuery/jquery-1.10.2.js"></script>
 <script src="Js/jQuery/jquery-ui-1.10.4.custom.min.js"></script>
-<script type="text/javascript">
-    $(function()
-    {
-        $("div.slider").slider({
-            min: -100,
-            max: 100,
-            values: [0],
-            step: 5,
-            slide: function(event, ui)
-            {
-                if(this.id == "sliderX")
-                    $("#lightPosX").val(ui.value);
-                else if(this.id == "sliderY")
-                    $("#lightPosY").val(ui.value);
-                else if(this.id == "sliderZ")
-                    $("#lightPosZ").val(ui.value);
-            }
-        });
-        $("#lightPosX").val($("#sliderX").slider("value"));
-        $("#lightPosY").val($("#sliderY").slider("value"));
-        $("#lightPosZ").val($("#sliderZ").slider("value"));
-    });
-</script>
+
+<script type="text/javascript" src="Js/jQuery/jquery_script.js"></script>
 
 <!--CSS-->
-<style type="text/css">
-    h4, p
-    {
-        text-align:center;
-    }
+<link rel="stylesheet" href="css/style_div_slider.css" type="text/css"/>
 
-    fieldset
-    {
-        text-align: center;
-        width: 500px;
-        margin: auto;
-        padding-top: 0px;
-    }
-
-    fieldset h3
-    {
-        margin-top: 0px;
-    }
-
-    fieldset input
-    {
-        border:0;
-        color:#f6931f;
-        font-weight:bold;
-        margin-bottom: 5px;
-    }
-</style>
 </head>
 
  <body onload="webGLStart(); resize();" onresize="resize();">
@@ -114,20 +68,38 @@
 
     <canvas id="canvas" height="500" width="500"></canvas><br><br>
 
-    <fieldset>
-        <h3>Light position</h3>
-        <div id="sliderX" class="slider"></div>
-        <label>X: </label>
-        <input type="text" id="lightPosX">
+    <!--The tune popup-->
+    <p>
+        Select your light:
+        <select name="lightSelected" id="lightSelected">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+        </select>
+        <input type="button" id="popupActivator" value="Light Position">
+    </p>
 
-        <div id="sliderY" class="slider"></div>
-        <label>Y: </label>
-        <input type="text" id="lightPosY">
+    <div id="popup" title="Tune the light position">
+        <fieldset>
+            <h3>ID light : <input type="text" id="lightSelectedStr" readonly></h3>
+            <div id="sliderX" class="slider"></div>
+            <label>X: </label>
+            <input type="text" id="lightPosX" readonly>
 
-        <div id="sliderZ" class="slider"></div>
-        <label>Z: </label>
-        <input type="text" id="lightPosZ">
-    </fieldset>
+            <div id="sliderY" class="slider"></div>
+            <label>Y: </label>
+            <input type="text" id="lightPosY" readonly>
+
+            <div id="sliderZ" class="slider"></div>
+            <label>Z: </label>
+            <input type="text" id="lightPosZ" readonly>
+        </fieldset>
+    </div>
 
     <h4>Rotate with: left mouse button.</h4>
     <h4>Move with: right mouse button.</h4>

@@ -211,6 +211,8 @@ function setTextures(gl, shaderProgram)
     gl.uniform1i(shaderProgram.specularUniform, 5);
 }
 
+var lightPosHtml = [[0, 0, 0], [100, -100, 50], [50, 25, 10]];
+
 function setUniform(gl, shaderProgram)
 {
     //other information
@@ -229,9 +231,9 @@ function setUniform(gl, shaderProgram)
     shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
     gl.uniform1iv(shaderProgram.enabledLights, enabledLight);
 
-    var lightPos = [parseFloat(document.getElementById("lightPosX").value), parseFloat(document.getElementById("lightPosY").value), parseFloat(document.getElementById("lightPosZ").value),
-                    500.0, 0.0, 200.0,
-                    250.0, 500.0, 200.0];
+    var lightPos = [lightPosHtml[0][0], lightPosHtml[0][1], lightPosHtml[0][2],
+                    lightPosHtml[1][0], lightPosHtml[1][1], lightPosHtml[1][2],
+                    lightPosHtml[2][0], lightPosHtml[2][1], lightPosHtml[2][2]];
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
