@@ -88,15 +88,15 @@
     }
 
 
-    float diffuse( vec3 Ln, vec3 Vf, vec3 Ns, vec3 ScannedNormal)
+    float diffuse( vec3 Lp, vec3 Vv, vec3 N, vec3 ScannedNormal)
     {
-        float ns_dot_v = dot(Ns,Vf);
-        float ns_dot_map = dot(Ns,ScannedNormal);
-        float map_dot_v = dot(ScannedNormal,Vf);
+        float ns_dot_v = dot(N,Vv);
+        float ns_dot_map = dot(N,ScannedNormal);
+        float map_dot_v = dot(ScannedNormal,Vv);
 
         //float cos_theta_i = ( map_dot_v <= 0.0 && ns_dot_v >= 0.0) ? 0.0 : dot(Ln, ScannedNormal) ;
         //float cos_theta_i = ( ns_dot_map <= 0.0 && ns_dot_v >= 0.0) ? dot(Ln, Ns) : dot(Ln, ScannedNormal) ;
-        float cos_theta_i = dot(Ln,ScannedNormal);
+        float cos_theta_i = dot(Lp,ScannedNormal);
         return  cos_theta_i;
     }
 
@@ -160,7 +160,7 @@
         gnorm = normalize(gnorm);
 
         vec3 bnorm = texture2D(blueNormals, vTextureCoord.st).rgb;
-        //bnorm  = bnorm * 2.0 - 1.0;
+        bnorm  = bnorm * 2.0 - 1.0;
         bnorm = uNMatrix * bnorm;
         bnorm = normalize(bnorm);
 
@@ -185,15 +185,15 @@
         {
             if( enabledLights[i] == 1)
             {
-                spec[i]=specular(lightPos[i], viewVec, normal , snorm, roughness, indiceOfRefraction);
+                spec[i]=specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
 
-                diffuseCol[i].r   = diffuse(lightPos[i], viewVec , normal, rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
-                diffuseCol[i].g   = diffuse(lightPos[i], viewVec , normal, gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
-                diffuseCol[i].b   = diffuse(lightPos[i], viewVec , normal, bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
+                diffuseCol[i].r   = diffuse(lightPos[i], viewVec , normalize(normal), rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
+                diffuseCol[i].g   = diffuse(lightPos[i], viewVec , normalize(normal), gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
+                diffuseCol[i].b   = diffuse(lightPos[i], viewVec , normalize(normal), bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
 
                 specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
                 diffComponent +=  diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
-                ambComponent += lightAmbient[i] * materialAmbient /* texColor.rgb*/;
+                ambComponent += lightAmbient[i] * materialAmbient;
 
                 nbLights++;
             }
@@ -211,7 +211,7 @@
         float spotCutoff = lightCutoff[i];
         if(cosDot < spotCutoff && enabledLights[i] == 1)
         {
-            spec[i] = specular(lightPos[i], viewVec, normal , snorm, roughness, indiceOfRefraction);
+            spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
 
             diffuseCol[i].r   = max(dot(-lightPos[i], rnorm), 0.0);
             diffuseCol[i].g   = max(dot(-lightPos[i], gnorm), 0.0);
