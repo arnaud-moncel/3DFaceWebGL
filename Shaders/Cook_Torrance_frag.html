@@ -53,7 +53,7 @@
     float fresnelReflectance( float VdotH, float f )
     {
         float base = 1.0-VdotH;
-        float exponential = pow(base, 5.0);
+        float exponential = pow(abs(base), 5.0);
         return min(1.0,(exponential + f * (1.0 - exponential)));
     }
 
@@ -165,9 +165,9 @@
         bnorm = normalize(bnorm);
 
         vec3  texColor =  texture2D(diffTexture, vTextureCoord.st).rgb;
-        texColor = pow(texColor,vec3(2.2));
+        texColor = pow(abs(texColor),vec3(2.2));
         vec3  specTexColor = texture2D(specTexture, vTextureCoord.st).rgb;
-        specTexColor = pow(specTexColor,vec3(2.2));
+        specTexColor = pow(abs(specTexColor),vec3(2.2));
 
 
         vec3 LightIntensity;
@@ -204,28 +204,34 @@
         specComponent /= nbLights;
 
         //The scanning light
-        const int i = 0;
+        //const int i = 0;
 
-        float spotDot = dot(-lightPos[i],normalize(lightDirection[i]));
-        float cosDot = acos(spotDot);
-        float spotCutoff = lightCutoff[i];
-        if(cosDot < spotCutoff && enabledLights[i] == 1)
+        for(int i = 0; i < 7; i++)
         {
-            spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
+            float spotDot = dot(-lightPos[i],normalize(lightDirection[i]));
+            float cosDot = acos(spotDot);
+            float spotCutoff = lightCutoff[i];
+            if(cosDot < spotCutoff && enabledLights[i] == 1)
+            {
+                spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
 
-            diffuseCol[i].r   = max(dot(-lightPos[i], rnorm), 0.0);
-            diffuseCol[i].g   = max(dot(-lightPos[i], gnorm), 0.0);
-            diffuseCol[i].b   = max(dot(-lightPos[i], bnorm), 0.0);
+                diffuseCol[i].r   = max(dot(-lightPos[i], rnorm), 0.0);
+                diffuseCol[i].g   = max(dot(-lightPos[i], gnorm), 0.0);
+                diffuseCol[i].b   = max(dot(-lightPos[i], bnorm), 0.0);
 
-            specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
-            diffComponent += diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
-            ambComponent += lightAmbient[i] * materialAmbient;
+                specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
+                diffComponent += diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
+                ambComponent += lightAmbient[i] * materialAmbient;
+            }
         }
+
+        specComponent /= nbLights;
+        diffComponent /= nbLights;
+        specComponent /= nbLights;
 
         LightIntensity =  0.5*diffComponent + 0.5*specComponent + ambComponent;
 
-        LightIntensity = pow(LightIntensity, vec3(1.0/2.2));
-
+        LightIntensity = pow(abs(LightIntensity), vec3(1.0/2.2));
 
         gl_FragColor = vec4 (LightIntensity, 1.0);
     }

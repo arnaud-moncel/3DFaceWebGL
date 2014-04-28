@@ -211,7 +211,9 @@ function setTextures(gl, shaderProgram)
     gl.uniform1i(shaderProgram.specularUniform, 5);
 }
 
+var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
 var lightPosHtml = [[0, 0, 15], [100, -100, 50], [50, 25, 10]];
+var lightDirectionHtml = [[0, 0, -10], [0, 0, -10], [100.0, 100.0, -50.0]];
 
 function setUniform(gl, shaderProgram)
 {
@@ -227,9 +229,8 @@ function setUniform(gl, shaderProgram)
 
 
     //light information
-    var enabledLight = [1, 0, 0, 0, 0, 0, 0, 0];
     shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
-    gl.uniform1iv(shaderProgram.enabledLights, enabledLight);
+    gl.uniform1iv(shaderProgram.enabledLights, enabledLightHtml);
 
     var lightPos = [lightPosHtml[0][0], lightPosHtml[0][1], lightPosHtml[0][2],
                     lightPosHtml[1][0], lightPosHtml[1][1], lightPosHtml[1][2],
@@ -237,14 +238,14 @@ function setUniform(gl, shaderProgram)
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    var lightDirection = [0.0, 0.0, -10,
-                          250.0, 250.0, -50.0,
-                          250.0, 250.0, -50.0];
+    var lightDirection = [lightDirectionHtml[0][0], lightDirectionHtml[0][1], lightDirectionHtml[0][2],
+                          lightDirectionHtml[1][0], lightDirectionHtml[1][1], lightDirectionHtml[1][2],
+                          lightDirectionHtml[2][0], lightDirectionHtml[2][1], lightDirectionHtml[2][2]];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
     gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 
     var lightAmbient = [0.2, 0.2, 0.2,
-                        0.15, 0.15, 0.15,
+                        0.2, 0.2, 0.2,
                         0.15, 0.15, 0.15];
     shaderProgram.lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
     gl.uniform3fv(shaderProgram.lightAmbient, lightAmbient);

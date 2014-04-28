@@ -81,21 +81,22 @@
             <option>7</option>
             <option>8</option>
         </select>
-        <input type="button" id="popupActivator" value="Light Position">
+        <input type="button" id="enableLightButton" value="Enabled">
+        <input type="button" id="popupLightPosActivator" value="Light Position">
     </p>
 
     <div id="popup" title="Tune the light position">
         <fieldset>
             <h3>ID light : <input type="text" id="lightSelectedStr" readonly></h3>
-            <div id="sliderX" class="slider"></div>
+            <div id="sliderX" class="sliderPos"></div>
             <label>X: </label>
             <input type="text" id="lightPosX" readonly>
 
-            <div id="sliderY" class="slider"></div>
+            <div id="sliderY" class="sliderPos"></div>
             <label>Y: </label>
             <input type="text" id="lightPosY" readonly>
 
-            <div id="sliderZ" class="slider"></div>
+            <div id="sliderZ" class="sliderPos"></div>
             <label>Z: </label>
             <input type="text" id="lightPosZ" readonly>
         </fieldset>

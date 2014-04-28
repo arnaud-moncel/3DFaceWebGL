@@ -3,12 +3,17 @@
  */
 $(function()
 {
+    /**
+     *  JQUERRY
+     */
     //The slider definition
-    $("div.slider").slider({
+
+
+    $("div.sliderPos").slider({
         min: -100,
         max: 100,
         values: 0,
-        step: 5,
+        step: 1,
         slide: function(event, ui)
         {
             //Update the label during the slide and update the lightPos value
@@ -26,7 +31,6 @@ $(function()
             {
                 $("#lightPosZ").val(ui.value);
                 lightPosHtml[$("#lightSelectedStr").val()-1][2] = ui.value;
-                console.log(lightPosHtml[$("#lightSelectedStr").val()-1][2]);
             }
         }
     });
@@ -39,7 +43,7 @@ $(function()
         });
 
     //Show popup only you click on the activator
-    $("#popupActivator").click(
+    $("#popupLightPosActivator").click(
         function()
         {
             $("#popup").dialog("open");
@@ -49,29 +53,75 @@ $(function()
     $("#lightSelected").click(
         function()
         {
-            $("#lightSelectedStr").val($("#lightSelected").val());
-
             //Set the slider value on the light selected value
-            $("#sliderX").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][0]));
-            $("#sliderY").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][1]));
-            $("#sliderZ").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][2]));
+            setSliderValue();
 
             //Set the label value on the slider value
-            $("#lightPosX").val($("#sliderX").slider("value"));
-            $("#lightPosY").val($("#sliderY").slider("value"));
-            $("#lightPosZ").val($("#sliderZ").slider("value"));
+            setLabelValue();
+
+            //set value of the enableLightButton on the selected light
+            setEnabledLight(true);
         });
 
-    //For the first initialisation
-    $("#lightSelectedStr").val($("#lightSelected").val());
+    //Change the light state when you click on the enableLightButton
+    $("#enableLightButton").click(
+        function()
+        {
+            //Change the state of the light
+            setEnabledLight(false);
+        });
 
-    //Set the slider value on the light selected value
-    $("#sliderX").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][0]));
-    $("#sliderY").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][1]));
-    $("#sliderZ").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][2]));
+
+
+
+    /**
+     *  FUNCTIONS
+     */
+    function setSliderValue()
+    {
+        $("#lightSelectedStr").val($("#lightSelected").val());
+
+        //Set the slider value on the light selected value
+        $("#sliderX").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][0]));
+        $("#sliderY").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][1]));
+        $("#sliderZ").slider("value", (lightPosHtml[$("#lightSelectedStr").val()-1][2]));
+    }
+    setSliderValue();
 
     //Set the label value on the slider value
-    $("#lightPosX").val($("#sliderX").slider("value"));
-    $("#lightPosY").val($("#sliderY").slider("value"));
-    $("#lightPosZ").val($("#sliderZ").slider("value"));
+    function setLabelValue()
+    {
+        $("#lightPosX").val($("#sliderX").slider("value"));
+        $("#lightPosY").val($("#sliderY").slider("value"));
+        $("#lightPosZ").val($("#sliderZ").slider("value"));
+    }
+    setLabelValue();
+
+    //set value of the enableLightButton on the selected light
+    function setEnabledLight(b)
+    {
+        if(enabledLightHtml[$("#lightSelectedStr").val()-1] == 1)
+        {
+            if(b)
+                $("#enableLightButton").val("Enabled");
+            else
+            {
+                enabledLightHtml[$("#lightSelectedStr").val()-1] = 0;
+                $("#enableLightButton").val("Disabled");
+            }
+        }
+        else
+        {
+            if(b)
+                $("#enableLightButton").val("Disabled");
+            else
+            {
+                enabledLightHtml[$("#lightSelectedStr").val()-1] = 1;
+                $("#enableLightButton").val("Enabled");
+            }
+        }
+    }
+    setEnabledLight(true);
+
+
 });
