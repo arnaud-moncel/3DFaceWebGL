@@ -213,7 +213,10 @@ function setTextures(gl, shaderProgram)
 
 var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
 var lightPosHtml = [[0, 0, 15], [100, -100, 50], [50, 25, 10]];
-var lightDirectionHtml = [[0, 0, -10], [0, 0, -10], [100.0, 100.0, -50.0]];
+var lightDirHtml = [[0, 0, -10], [0, 0, -10], [100.0, 100.0, -50.0]];
+var lightColorHtml = [[[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
 
 function setUniform(gl, shaderProgram)
 {
@@ -238,27 +241,27 @@ function setUniform(gl, shaderProgram)
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    var lightDirection = [lightDirectionHtml[0][0], lightDirectionHtml[0][1], lightDirectionHtml[0][2],
-                          lightDirectionHtml[1][0], lightDirectionHtml[1][1], lightDirectionHtml[1][2],
-                          lightDirectionHtml[2][0], lightDirectionHtml[2][1], lightDirectionHtml[2][2]];
+    var lightDirection = [lightDirHtml[0][0], lightDirHtml[0][1], lightDirHtml[0][2],
+                          lightDirHtml[1][0], lightDirHtml[1][1], lightDirHtml[1][2],
+                          lightDirHtml[2][0], lightDirHtml[2][1], lightDirHtml[2][2]];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
     gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 
-    var lightAmbient = [0.2, 0.2, 0.2,
-                        0.2, 0.2, 0.2,
-                        0.15, 0.15, 0.15];
+    var lightAmbient = [lightColorHtml[0][0][0], lightColorHtml[0][0][1], lightColorHtml[0][0][2],
+                        lightColorHtml[1][0][0], lightColorHtml[1][0][1], lightColorHtml[1][0][2],
+                        lightColorHtml[2][0][0], lightColorHtml[2][0][1], lightColorHtml[2][0][2]];
     shaderProgram.lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
     gl.uniform3fv(shaderProgram.lightAmbient, lightAmbient);
 
-    var lightDiffuse = [0.4, 0.4, 0.4,
-                        0.4, 0.4, 0.4,
-                        0.4, 0.4, 0.4];
+    var lightDiffuse = [lightColorHtml[0][1][0], lightColorHtml[0][1][1], lightColorHtml[0][1][2],
+                        lightColorHtml[1][1][0], lightColorHtml[1][1][1], lightColorHtml[1][1][2],
+                        lightColorHtml[2][1][0], lightColorHtml[2][1][1], lightColorHtml[2][1][2]];
     shaderProgram.lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
     gl.uniform3fv(shaderProgram.lightDiffuse, lightDiffuse);
 
-    var lightSpecular = [0.7, 0.7, 0.7,
-                         0.4, 0.4, 0.4,
-                         0.4, 0.4, 0.4];
+    var lightSpecular = [lightColorHtml[0][2][0], lightColorHtml[0][2][1], lightColorHtml[0][2][2],
+                         lightColorHtml[1][2][0], lightColorHtml[1][2][1], lightColorHtml[1][2][2],
+                         lightColorHtml[2][2][0], lightColorHtml[2][2][1], lightColorHtml[2][2][2]];
     shaderProgram.lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
     gl.uniform3fv(shaderProgram.lightSpecular, lightSpecular);
 

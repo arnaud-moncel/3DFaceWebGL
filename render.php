@@ -83,22 +83,92 @@
         </select>
         <input type="button" id="enableLightButton" value="Enabled">
         <input type="button" id="popupLightPosActivator" value="Light Position">
+        <input type="button" id="popupLightDirActivator" value="Light Direction"><br>
+        <input type="button" id="popupLightColorActivator" value="Light Color">
     </p>
 
-    <div id="popup" title="Tune the light position">
+    <!--The light position popup-->
+    <div id="popupLightPos" class="popup" title="Tune the light position">
         <fieldset>
-            <h3>ID light : <input type="text" id="lightSelectedStr" readonly></h3>
-            <div id="sliderX" class="sliderPos"></div>
+            <h3>ID light : <input type="text" class="lightSelectedStr" readonly></h3>
+            <h4>Position: </h4>
+            <div id="sliderLightPosX" class="sliderLightPos"></div>
             <label>X: </label>
             <input type="text" id="lightPosX" readonly>
 
-            <div id="sliderY" class="sliderPos"></div>
+            <div id="sliderLightPosY" class="sliderLightPos"></div>
             <label>Y: </label>
             <input type="text" id="lightPosY" readonly>
 
-            <div id="sliderZ" class="sliderPos"></div>
+            <div id="sliderLightPosZ" class="sliderLightPos"></div>
             <label>Z: </label>
             <input type="text" id="lightPosZ" readonly>
+        </fieldset>
+    </div>
+
+    <!--The light position popup-->
+    <div id="popupLightDir" class="popup" title="Tune the light direction">
+        <fieldset>
+            <h3>ID light : <input type="text" class="lightSelectedStr" readonly></h3>
+            <h4>Direction: </h4>
+            <div id="sliderLightDirX" class="sliderLightDir"></div>
+            <label>X: </label>
+            <input type="text" id="lightDirX" readonly>
+
+            <div id="sliderLightDirY" class="sliderLightDir"></div>
+            <label>Y: </label>
+            <input type="text" id="lightDirY" readonly>
+
+            <div id="sliderLightDirZ" class="sliderLightDir"></div>
+            <label>Z: </label>
+            <input type="text" id="lightDirZ" readonly>
+        </fieldset>
+    </div>
+
+    <!--The light color popup-->
+    <div id="popupLightColor" class="popup" title="Tune the light color">
+        <fieldset>
+            <h3>ID light : <input type="text" class="lightSelectedStr" readonly></h3>
+            <h4>Ambient: </h4>
+            <div id="sliderLightAmbR" class="sliderLightAmb"></div>
+            <label>R: </label>
+            <input type="text" id="lightAmbR" readonly>
+
+            <div id="sliderLightAmbG" class="sliderLightAmb"></div>
+            <label>G: </label>
+            <input type="text" id="lightAmbG" readonly>
+
+            <div id="sliderLightAmbB" class="sliderLightAmb"></div>
+            <label>B: </label>
+            <input type="text" id="lightAmbB" readonly>
+
+
+            <h4>Diffuse: </h4>
+            <div id="sliderLightDifR" class="sliderLightDif"></div>
+            <label>R: </label>
+            <input type="text" id="lightDifR" readonly>
+
+            <div id="sliderLightDifG" class="sliderLightDif"></div>
+            <label>G: </label>
+            <input type="text" id="lightDifG" readonly>
+
+            <div id="sliderLightDifB" class="sliderLightDif"></div>
+            <label>B: </label>
+            <input type="text" id="lightDifB" readonly>
+
+
+            <h4>Specular: </h4>
+            <div id="sliderLightSpecR" class="sliderLightSpec"></div>
+            <label>R: </label>
+            <input type="text" id="lightSpecR" readonly>
+
+            <div id="sliderLightSpecG" class="sliderLightSpec"></div>
+            <label>G: </label>
+            <input type="text" id="lightSpecG" readonly>
+
+            <div id="sliderLightSpecB" class="sliderLightSpec"></div>
+            <label>B: </label>
+            <input type="text" id="lightSpecB" readonly>
         </fieldset>
     </div>
 
