@@ -217,10 +217,7 @@ $(function()
     $("#illuminationModel").click(
         function()
         {
-            if($("#illuminationModel").val() == "Phong")
-                phongHtml = 1;
-            else
-                phongHtml = 0;
+                phongHtml = $("#illuminationModel").val() == "Phong" ? 1:0;
         });
 
 
@@ -311,6 +308,7 @@ $(function()
     }
     setEnabledLight(true);
 
-
+    //first init of the select model
+    $("#illuminationModel").val(phongHtml == 1 ? "Phong":"Cook Torrance");
 
 });
