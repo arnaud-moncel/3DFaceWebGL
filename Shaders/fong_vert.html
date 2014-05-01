@@ -13,7 +13,8 @@
     {
         vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
         vMvPosition = mvPosition.xyz;
-        gl_Position = uPMatrix * mvPosition;
         vTextureCoord = aTextureCoord;
+
+        gl_Position = uPMatrix * mvPosition;
     }
 </script>

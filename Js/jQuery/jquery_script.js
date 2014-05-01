@@ -214,6 +214,15 @@ $(function()
             setEnabledLight(false);
         });
 
+    $("#illuminationModel").click(
+        function()
+        {
+            if($("#illuminationModel").val() == "Phong")
+                phongHtml = 1;
+            else
+                phongHtml = 0;
+        });
+
 
 
 
@@ -301,6 +310,7 @@ $(function()
         }
     }
     setEnabledLight(true);
+
 
 
 });

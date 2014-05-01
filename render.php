@@ -68,6 +68,14 @@
 
     <canvas id="canvas" height="500" width="500"></canvas><br><br>
 
+    <p>
+        Select the illumination model:
+        <select name="illuminationModel" id="illuminationModel">
+            <option>Phong</option>
+            <option>Cook Torrance</option>
+        </select>
+    </p>
+
     <!--The tune popup-->
     <p>
         Select your light:

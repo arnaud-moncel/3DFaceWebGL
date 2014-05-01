@@ -32,11 +32,13 @@
     uniform vec3 materialDiffuse;
     uniform vec3 materialSpecular;
 
+    uniform int phong;
+
     //varying variables for vs
     varying vec2 vTextureCoord;
     varying vec3 normal;
 
-    varying vec4 position;
+    varying vec3 position;
 
     float beckmann(	float cosalpha, float r )
     {
@@ -97,6 +99,7 @@
         //float cos_theta_i = ( map_dot_v <= 0.0 && ns_dot_v >= 0.0) ? 0.0 : dot(Ln, ScannedNormal) ;
         //float cos_theta_i = ( ns_dot_map <= 0.0 && ns_dot_v >= 0.0) ? dot(Ln, Ns) : dot(Ln, ScannedNormal) ;
         float cos_theta_i = dot(Lp,ScannedNormal);
+
         return  cos_theta_i;
     }
 
@@ -142,6 +145,16 @@
         return spec;
     }
 
+    //for phong
+    vec3 getSpecular(vec3 normal, vec3 lightDir, vec3 viewDir, float specPow, vec3 col)
+    {
+        vec3 transformedNormal =normalize(uNMatrix * normal);
+        vec3 reflectDir = normalize(reflect(lightDir, transformedNormal));
+        float specAngle = max(dot(reflectDir, viewDir), 0.0);//max(dot(transformedNormal.xyz, lightDir), 0.0);//
+        float specular = pow(specAngle, specPow);
+        return vec3(specular)*col;
+    }
+
     void main(void)
     {
         vec3 snorm = texture2D(specNormals, vTextureCoord.st).rgb;
@@ -185,13 +198,21 @@
         {
             if( enabledLights[i] == 1)
             {
-                spec[i]=specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
+                if(phong == 1)
+                {
+                    specComponent += getSpecular(snorm, normalize(lightDirection[i]), viewVec, 10.0, specTexColor.rgb);
+                }
+                else
+                {
+                    spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
 
-                diffuseCol[i].r   = diffuse(lightPos[i], viewVec , normalize(normal), rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
-                diffuseCol[i].g   = diffuse(lightPos[i], viewVec , normalize(normal), gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
-                diffuseCol[i].b   = diffuse(lightPos[i], viewVec , normalize(normal), bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
+                    specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
+                }
 
-                specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
+                diffuseCol[i].r = diffuse(lightPos[i], viewVec , normalize(normal), rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
+                diffuseCol[i].g = diffuse(lightPos[i], viewVec , normalize(normal), gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
+                diffuseCol[i].b = diffuse(lightPos[i], viewVec , normalize(normal), bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
+
                 diffComponent +=  diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
                 ambComponent += lightAmbient[i] * materialAmbient;
 
@@ -213,13 +234,21 @@
             float spotCutoff = lightCutoff[i];
             if(cosDot < spotCutoff && enabledLights[i] == 1)
             {
-                spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
+                if(phong == 1)
+                {
+                    specComponent += getSpecular(snorm, normalize(lightDirection[i]), viewVec, 10.0, lightSpecular[i] * specTexColor.rgb);
+                }
+                else
+                {
+                    spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
 
-                diffuseCol[i].r   = max(dot(-lightPos[i], rnorm), 0.0);
-                diffuseCol[i].g   = max(dot(-lightPos[i], gnorm), 0.0);
-                diffuseCol[i].b   = max(dot(-lightPos[i], bnorm), 0.0);
+                    specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
+                }
 
-                specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
+                diffuseCol[i].r = max(dot(-lightPos[i], rnorm), 0.0);
+                diffuseCol[i].g = max(dot(-lightPos[i], gnorm), 0.0);
+                diffuseCol[i].b = max(dot(-lightPos[i], bnorm), 0.0);
+
                 diffComponent += diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
                 ambComponent += lightAmbient[i] * materialAmbient;
             }
