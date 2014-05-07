@@ -211,25 +211,35 @@ function setTextures(gl, shaderProgram)
     gl.uniform1i(shaderProgram.specularUniform, 5);
 }
 
+var roughnessHtml = 0.1;
+var indiceOfRefractionHtml = 3.0;
+var ecPosition = [0.0, 0.0, 10.0];
+
+var phongHtml = 0;
+
 var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
 var lightPosHtml = [[0.0, 0.0, 15.0], [100.0, -100.0, 50.0], [50.0, 25.0, 10.0]];
 var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0]];
 var lightColorHtml = [[[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
                       [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
                       [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
-var phongHtml = 0;
+var lightCutoffHtml = [0.0, 90.0, 20.0];
+
+var materialAmbientHtml = [0.2, 0.2, 0.2];
+var materialDiffuseHtml = [0.4, 0.4, 0.4];
+var materialSpecularHtml = [0.7, 0.7, 0.7];
 
 function setUniform(gl, shaderProgram)
 {
     //other information
     shaderProgram.roughness = gl.getUniformLocation(shaderProgram, "roughness");
-    gl.uniform1f(shaderProgram.roughness, 0.1);
+    gl.uniform1f(shaderProgram.roughness, parseFloat(roughnessHtml));
     shaderProgram.indiceOfRefraction = gl.getUniformLocation(shaderProgram, "indiceOfRefraction");
-    gl.uniform1f(shaderProgram.indiceOfRefraction, 3.0);
+    gl.uniform1f(shaderProgram.indiceOfRefraction, parseFloat(indiceOfRefractionHtml));
 
-    var ecPosition = [0.0, 0.0, 10.0];
     shaderProgram.ecPosition = gl.getUniformLocation(shaderProgram, "ecPosition");
     gl.uniform3fv(shaderProgram.ecPosition, ecPosition);
+
 
     shaderProgram.phong = gl.getUniformLocation(shaderProgram, "phong");
     gl.uniform1i(shaderProgram.phong, phongHtml);
@@ -269,23 +279,19 @@ function setUniform(gl, shaderProgram)
     shaderProgram.lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
     gl.uniform3fv(shaderProgram.lightSpecular, lightSpecular);
 
-    var lightCutoff = [0.0, 90.0, 20.0];
     shaderProgram.lightCutoff = gl.getUniformLocation(shaderProgram, "lightCutoff");
-    gl.uniform1fv(shaderProgram.lightCutoff, lightCutoff);
+    gl.uniform1fv(shaderProgram.lightCutoff, lightCutoffHtml);
 
 
     //material information
-    var materialAmbient = [0.2, 0.2, 0.2];
     shaderProgram.materialAmbient = gl.getUniformLocation(shaderProgram, "materialAmbient");
-    gl.uniform3fv(shaderProgram.materialAmbient, materialAmbient);
+    gl.uniform3fv(shaderProgram.materialAmbient, materialAmbientHtml);
 
-    var materialDiffuse = [0.4, 0.4, 0.4];
     shaderProgram.materialDiffuse = gl.getUniformLocation(shaderProgram, "materialDiffuse");
-    gl.uniform3fv(shaderProgram.materialDiffuse, materialDiffuse);
+    gl.uniform3fv(shaderProgram.materialDiffuse, materialDiffuseHtml);
 
-    var materialSpecular = [0.7, 0.7, 0.7];
     shaderProgram.materialSpecular = gl.getUniformLocation(shaderProgram, "materialSpecular");
-    gl.uniform3fv(shaderProgram.materialSpecular, materialSpecular);
+    gl.uniform3fv(shaderProgram.materialSpecular, materialSpecularHtml);
 }
 
 

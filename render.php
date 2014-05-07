@@ -93,6 +93,8 @@
         <input type="button" id="popupLightPosActivator" value="Light Position">
         <input type="button" id="popupLightDirActivator" value="Light Direction"><br>
         <input type="button" id="popupLightColorActivator" value="Light Color">
+        <input type="button" id="popupMaterialColorActivator" value="Material Color">
+        <input type="button" id="popupOtherActivator" value="Other">
     </p>
 
     <!--The light position popup-->
@@ -114,7 +116,7 @@
         </fieldset>
     </div>
 
-    <!--The light position popup-->
+    <!--The light direction popup-->
     <div id="popupLightDir" class="popup" title="Tune the light direction">
         <fieldset>
             <h3>ID light : <input type="text" class="lightSelectedStr" readonly></h3>
@@ -130,6 +132,12 @@
             <div id="sliderLightDirZ" class="sliderLightDir"></div>
             <label>Z: </label>
             <input type="text" id="lightDirZ" readonly>
+
+            <!--Cut of-->
+            <h4>Cut off: </h4>
+            <div id="sliderLightCutOff" class="classSliderLightCutOff"></div>
+            <label>Value: </label>
+            <input type="text" id="lightCutOff" readonly>
         </fieldset>
     </div>
 
@@ -177,6 +185,67 @@
             <div id="sliderLightSpecB" class="sliderLightSpec"></div>
             <label>B: </label>
             <input type="text" id="lightSpecB" readonly>
+        </fieldset>
+    </div>
+
+    <!--The light color popup-->
+    <div id="popupMaterialColor" class="popup" title="Tune the material color">
+        <fieldset>
+            <h4>Ambient: </h4>
+            <div id="sliderMaterialAmbR" class="sliderMaterialAmb"></div>
+            <label>R: </label>
+            <input type="text" id="materialAmbR" readonly>
+
+            <div id="sliderMaterialAmbG" class="sliderMaterialAmb"></div>
+            <label>G: </label>
+            <input type="text" id="materialAmbG" readonly>
+
+            <div id="sliderMaterialAmbB" class="sliderMaterialAmb"></div>
+            <label>B: </label>
+            <input type="text" id="materialAmbB" readonly>
+
+
+            <h4>Diffuse: </h4>
+            <div id="sliderMaterialDifR" class="sliderMaterialDif"></div>
+            <label>R: </label>
+            <input type="text" id="materialDifR" readonly>
+
+            <div id="sliderMaterialDifG" class="sliderMaterialDif"></div>
+            <label>G: </label>
+            <input type="text" id="materialDifG" readonly>
+
+            <div id="sliderMaterialDifB" class="sliderMaterialDif"></div>
+            <label>B: </label>
+            <input type="text" id="materialDifB" readonly>
+
+
+            <h4>Specular: </h4>
+            <div id="sliderMaterialSpecR" class="sliderMaterialSpec"></div>
+            <label>R: </label>
+            <input type="text" id="materialSpecR" readonly>
+
+            <div id="sliderMaterialSpecG" class="sliderMaterialSpec"></div>
+            <label>G: </label>
+            <input type="text" id="materialSpecG" readonly>
+
+            <div id="sliderMaterialSpecB" class="sliderMaterialSpec"></div>
+            <label>B: </label>
+            <input type="text" id="materialSpecB" readonly>
+        </fieldset>
+    </div>
+
+    <!--The other popup-->
+    <div id="popupOther" class="popup" title="Tune other parameters">
+        <fieldset>
+            <h4>Roughness: </h4>
+            <div id="sliderRoughness" class="classSliderRoughness"></div>
+            <label>X: </label>
+            <input type="text" id="roughness" readonly>
+
+            <h4>Indice of refraction: </h4>
+            <div id="sliderIndiceOfRefraction" class="classSliderIndiceOfRefraction"></div>
+            <label>Y: </label>
+            <input type="text" id="indiceOfRefraction" readonly>
         </fieldset>
     </div>
 
