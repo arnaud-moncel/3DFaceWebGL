@@ -12,7 +12,8 @@ $(function()
         min: -100,
         max: 100,
         values: 0,
-        step: 1
+        step: 1,
+        range: "min"
     };
 
     var slideCutOffDef =
@@ -20,7 +21,8 @@ $(function()
         min: -360,
         max: 360,
         values: 0,
-        step: 1
+        step: 1,
+        range: "min"
     };
 
     var slideColDef =
@@ -28,7 +30,8 @@ $(function()
         min: 0,
         max: 1,
         values: 0,
-        step: 0.05
+        step: 0.05,
+        range: "min"
     };
 
     var slideRoughnessDef =
@@ -36,7 +39,8 @@ $(function()
         min: 0,
         max: 0.3,
         values: 0,
-        step: 0.001
+        step: 0.001,
+        range: "min"
     };
 
     var slideIndiceOfRefractionDef =
@@ -44,7 +48,8 @@ $(function()
         min: 0,
         max: 5,
         values: 0,
-        step: 0.01
+        step: 0.01,
+        range: "min"
     };
 
 

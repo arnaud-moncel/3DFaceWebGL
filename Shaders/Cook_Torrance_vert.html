@@ -11,17 +11,18 @@
     uniform mat4 uPMatrix;
 
     varying vec2 vTextureCoord;
-    varying vec3 normal;
+    varying vec3 vNormal;
 
-    varying vec3 position;
+    varying vec3 vPosition;
 
     void main(void)
     {
         vTextureCoord = aTextureCoord;
-        normal = aVertexNormal;
+        vNormal = aVertexNormal;
 
         vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
-        position = mvPosition.xyz;
+        vPosition = mvPosition.xyz;
+        //vPosition = aVertexPosition.xyz;
 
         gl_Position = uPMatrix * mvPosition;
     }

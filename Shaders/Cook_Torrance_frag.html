@@ -36,9 +36,9 @@
 
     //varying variables for vs
     varying vec2 vTextureCoord;
-    varying vec3 normal;
+    varying vec3 vNormal;
 
-    varying vec3 position;
+    varying vec3 vPosition;
 
     float beckmann(	float cosalpha, float r )
     {
@@ -55,7 +55,7 @@
     float fresnelReflectance( float VdotH, float f )
     {
         float base = 1.0-VdotH;
-        float exponential = pow(abs(base), 5.0);
+        float exponential = pow(base, 5.0);
         return min(1.0,(exponential + f * (1.0 - exponential)));
     }
 
@@ -90,6 +90,7 @@
     }
 
 
+    //param lightPos, viewVec , normal, colorNorm
     float diffuse( vec3 Lp, vec3 Vv, vec3 N, vec3 ScannedNormal)
     {
         float ns_dot_v = dot(N,Vv);
@@ -178,9 +179,9 @@
         bnorm = normalize(bnorm);
 
         vec3  texColor =  texture2D(diffTexture, vTextureCoord.st).rgb;
-        texColor = pow(abs(texColor),vec3(2.2));
+        texColor = pow(texColor,vec3(2.2));
         vec3  specTexColor = texture2D(specTexture, vTextureCoord.st).rgb;
-        specTexColor = pow(abs(specTexColor),vec3(2.2));
+        specTexColor = pow(specTexColor,vec3(2.2));
 
 
         vec3 LightIntensity;
@@ -204,14 +205,14 @@
                 }
                 else
                 {
-                    spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
+                    spec[i] = specular(lightPos[i], viewVec, normalize(vNormal), snorm, roughness, indiceOfRefraction);
 
                     specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
                 }
 
-                diffuseCol[i].r = diffuse(lightPos[i], viewVec , normalize(normal), rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
-                diffuseCol[i].g = diffuse(lightPos[i], viewVec , normalize(normal), gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
-                diffuseCol[i].b = diffuse(lightPos[i], viewVec , normalize(normal), bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
+                diffuseCol[i].r = diffuse(lightPos[i], viewVec , normalize(vNormal), rnorm);//min(max(dot(-lightPos[i], rnorm), 0.0),1.0);
+                diffuseCol[i].g = diffuse(lightPos[i], viewVec , normalize(vNormal), gnorm);//min(max(dot(-lightPos[i], gnorm), 0.0),1.0);
+                diffuseCol[i].b = diffuse(lightPos[i], viewVec , normalize(vNormal), bnorm);//min(max(dot(-lightPos[i], bnorm), 0.0),1.0);
 
                 diffComponent +=  diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
                 ambComponent += lightAmbient[i] * materialAmbient;
@@ -222,11 +223,12 @@
 
         specComponent /= nbLights;
         diffComponent /= nbLights;
-        specComponent /= nbLights;
+        ambComponent /= nbLights;
 
         //The scanning light
         //const int i = 0;
 
+        nbLights = 0.0;
         for(int i = 0; i < 7; i++)
         {
             float spotDot = dot(-lightPos[i],normalize(lightDirection[i]));
@@ -240,7 +242,7 @@
                 }
                 else
                 {
-                    spec[i] = specular(lightPos[i], viewVec, normalize(normal), snorm, roughness, indiceOfRefraction);
+                    spec[i] = specular(lightPos[i], viewVec, normalize(vNormal), snorm, roughness, indiceOfRefraction);
 
                     specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
                 }
@@ -251,16 +253,18 @@
 
                 diffComponent += diffuseCol[i].rgb * lightDiffuse[i] * materialDiffuse * texColor.rgb;
                 ambComponent += lightAmbient[i] * materialAmbient;
+
+                nbLights++;
             }
         }
 
         specComponent /= nbLights;
         diffComponent /= nbLights;
-        specComponent /= nbLights;
+        ambComponent /= nbLights;
 
         LightIntensity =  0.5*diffComponent + 0.5*specComponent + ambComponent;
 
-        LightIntensity = pow(abs(LightIntensity), vec3(1.0/2.2));
+        LightIntensity = pow(LightIntensity, vec3(1.0/2.2));
 
         gl_FragColor = vec4 (LightIntensity, 1.0);
     }

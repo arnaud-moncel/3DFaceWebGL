@@ -220,13 +220,13 @@ var phongHtml = 0;
 var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
 var lightPosHtml = [[0.0, 0.0, 15.0], [100.0, -100.0, 50.0], [50.0, 25.0, 10.0]];
 var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0]];
-var lightColorHtml = [[[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+var lightColorHtml = [[[0.2, 0.2, 0.2], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
                       [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
                       [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
 var lightCutoffHtml = [0.0, 90.0, 20.0];
 
 var materialAmbientHtml = [0.2, 0.2, 0.2];
-var materialDiffuseHtml = [0.4, 0.4, 0.4];
+var materialDiffuseHtml = [0.6, 0.6, 0.6];
 var materialSpecularHtml = [0.7, 0.7, 0.7];
 
 function setUniform(gl, shaderProgram)
@@ -298,7 +298,7 @@ function setUniform(gl, shaderProgram)
 function webGLStart()
 {
     var dir = document.getElementById("directory").value;
-    loadObj("./Mesh/"+dir+"/mesh.obj");
+    loadObj("./Mesh/"+dir+"/mesh_mid.obj");
 
     var canvas = document.getElementById("canvas");
     initGL(canvas);
