@@ -135,11 +135,11 @@ function Group()
 Group.prototype.addChild = function(child)
 {
     this.children.push(child);
-}
+};
 Group.prototype.addLeaf = function(leaf)
 {
     this.leaves.push(leaf);
-}
+};
 	
 Group.prototype.draw = function(gl)
 {
@@ -151,7 +151,7 @@ Group.prototype.draw = function(gl)
 
     for (var i=0; i<this.leaves.length; i++)
 	    this.leaves[i].postRender(gl);
-}
+};
 
 
 function Transform(mat)
@@ -162,18 +162,18 @@ function Transform(mat)
 Transform.prototype.setMatrix = function(mat)
 {
     this.mat = mat;
-}
+};
 
 Transform.prototype.preRender = function(gl)
 {
     mvPushMatrix();
     mat4.multiply(mvMatrix, this.mat, mvMatrix);
-}
+};
     
 Transform.prototype.postRender = function(gl)
 {
     mvPopMatrix();
-}
+};
 
 
 function RotationBehavior(speed)
@@ -194,13 +194,13 @@ RotationBehavior.prototype.preRender = function(gl)
         this.angle+=this.speed*elapsed*0.01;
     }
     this.lastTime = timeNow;
-}
+};
 
     
 RotationBehavior.prototype.postRender = function(gl)
 {
     mvPopMatrix();
-}
+};
 
 function Texture(texFile, texUnit){
         this.textureUnit = texUnit;
@@ -341,7 +341,7 @@ Sphere.prototype.draw = function(gl)
     setMatrixUniforms();
     gl.drawElements(gl.TRIANGLES, sphereVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     mvPopMatrix();
-}
+};
 
 /*function Box(gl, size) {
         this.size = size;
@@ -547,14 +547,65 @@ function fixIndices(vertexIndices, originalIndex, originalArray, dim) {
   return newArray;
 }
 
+//struct point
+function vertex(X, Y, Z)
+{
+    this.x = X;
+    this.y = Y;
+    this.z = Z;
+}
+
+//dot
+function vecto(v1, v2)
+{
+    this.x = v1.y * v2.z - v1.z * v2.y;
+    this.y = -v1.x * v2.z + v1.z * v2.x;
+    this.z = v1.x * v2.y - v1.y * v2.x;
+}
+
+//struct plan
+function plan(n)
+{
+    this.a = n.x;
+    this.b = n.y;
+    this.c = n.z;
+
+    this.d = 0;
+}
+
+function meshDecimation(vertices, faces)
+{
+    for(var i = 0; i < faces.length; i += 3)
+    {
+        var v1 = new vertex(vertices[faces[i]*3], vertices[faces[i]*3+1], vertices[faces[i]*3+2]);
+        var v2 = new vertex(vertices[faces[i+1]*3], vertices[faces[i+1]*3+1], vertices[faces[i+1]*3+2]);
+        var v3 = new vertex(vertices[faces[i+2]*3], vertices[faces[i+2]*3+1], vertices[faces[i+2]*3+2]);
+
+        var v12 = v2 - v1;
+        var v13 = v3 - v1;
+
+        var n = new vecto(v12, v13);
+
+        var p = new plan(n);
+        p.d = -(v1.x*p.a + v1.y*p.b + v1.z*p.c);
+
+
+        var mat = [p.a*p.a, p.a*p.b, p.a*p.c, p.a*p.d,
+                   p.a*p.b, p.b*p.b, p.b*p.c, p.b*p.d,
+                   p.a*p.c, p.b*p.c, p.c*p.c, p.c*p.d,
+                   p.a*p.d, p.b*p.d, p.c*p.d, p.d*p.d];
+        var k = mat4.create(mat);
+    }
+}
+
 function Obj(gl, text, size)
 {
     this.size = size;
-    var vertices = [];
+    this.vertices = [];
     var verticesCount = 0;
     var normals = [];
-    var uvs = [];
-    var vertexIndices = [];
+    this.uvs = [];
+    this.vertexIndices = [];
     var uvIndices = [];
     var normalIndices = [];
 
@@ -564,7 +615,7 @@ function Obj(gl, text, size)
 
     // vn float float float
 
-    var normal_pattern = /vn( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)/;
+    //var normal_pattern = /vn( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)/;
 
     // vt float float
 
@@ -572,7 +623,7 @@ function Obj(gl, text, size)
 
     // f vertex vertex vertex
 
-    var face_pattern1 = /f( +\d+)( +\d+)( +\d+)/;
+    //var face_pattern1 = /f( +\d+)( +\d+)( +\d+)/;
 
     // f vertex/uv vertex/uv vertex/uv
 
@@ -580,11 +631,11 @@ function Obj(gl, text, size)
 
     // f vertex/uv/normal vertex/uv/normal vertex/uv/normal
 
-    var face_pattern3 = /f( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))/;
+   //var face_pattern3 = /f( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))/;
 
     // f vertex//normal vertex//normal vertex//normal
 
-    var face_pattern4 = /f( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))/;
+    //var face_pattern4 = /f( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))/;
 
     //
 
@@ -605,13 +656,13 @@ function Obj(gl, text, size)
         {
             // ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
 
-            vertices.push(
+            this.vertices.push(
                 parseFloat( result[ 1 ] ),
                 parseFloat( result[ 2 ] ),
                 parseFloat( result[ 3 ] )
              );
         }
-        else if ( ( result = normal_pattern.exec( line ) ) !== null )
+        /*else if ( ( result = normal_pattern.exec( line ) ) !== null )
         {
             // ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
 
@@ -620,17 +671,17 @@ function Obj(gl, text, size)
                 parseFloat( result[ 2 ] ),
                 parseFloat( result[ 3 ] )
              );
-        }
+        }*/
         else if ( ( result = uv_pattern.exec( line ) ) !== null )
         {
             // ["vt 0.1 0.2", "0.1", "0.2"]
 
-            uvs.push(
+            this.uvs.push(
                 parseFloat( result[ 1 ] ),
                 parseFloat( result[ 2 ] )
              );
         }
-        else if ( ( result = face_pattern1.exec( line ) ) !== null )
+        /*else if ( ( result = face_pattern1.exec( line ) ) !== null )
         {
             // ["f 1 2 3", "1", "2", "3"]
 
@@ -650,12 +701,12 @@ function Obj(gl, text, size)
                  parseInt( result[ 2 ] ) - 1 ,
                  parseInt( result[ 3 ] ) - 1
             );
-        }
+        }*/
         else if ( ( result = face_pattern2.exec( line ) ) !== null )
         {
             // ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3"]
 
-            vertexIndices.push(
+            this.vertexIndices.push(
                  parseInt( result[ 2 ] ) - 1 ,
                  parseInt( result[ 5 ] ) - 1 ,
                  parseInt( result[ 8 ] ) - 1
@@ -672,7 +723,7 @@ function Obj(gl, text, size)
                  parseInt( result[ 8 ] ) - 1
             );
         }
-        else if ( ( result = face_pattern3.exec( line ) ) !== null )
+       /* else if ( ( result = face_pattern3.exec( line ) ) !== null )
         {
             // ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3"]
 
@@ -693,8 +744,8 @@ function Obj(gl, text, size)
                  parseInt( result[ 8 ] ) - 1 ,
                  parseInt( result[ 12 ] ) - 1
             );
-        }
-        else if ( ( result = face_pattern4.exec( line ) ) !== null )
+        }*/
+       /* else if ( ( result = face_pattern4.exec( line ) ) !== null )
         {
             // ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3"]
 
@@ -713,22 +764,25 @@ function Obj(gl, text, size)
                  parseInt( result[ 6 ] ) - 1 ,
                  parseInt( result[ 9 ] ) - 1
             );
-        }
+        }*/
         else
         {
              console.log( "ObjLoader: Unhandled line " + line );
         }
     }
 
-    normals = fixIndices(vertexIndices, normalIndices, normals, 3);
-    uvs = fixIndices(vertexIndices, uvIndices, uvs, 2);
+    meshDecimation(this.vertices, this.vertexIndices);
+
+
+    normals = fixIndices(this.vertexIndices, normalIndices, normals, 3);
+    this.uvs = fixIndices(this.vertexIndices, uvIndices, this.uvs, 2);
 
     this.cubeVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
 
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices),gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices),gl.STATIC_DRAW);
     this.cubeVertexPositionBuffer.itemSize = 3;
-    this.cubeVertexPositionBuffer.numItems = vertices.length/3;
+    this.cubeVertexPositionBuffer.numItems = this.vertices.length/3;
 
     this.cubeVertexNormalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexNormalBuffer);
@@ -740,16 +794,16 @@ function Obj(gl, text, size)
     this.cubeVertexTextureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexTextureCoordBuffer);
 
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvs), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.uvs), gl.STATIC_DRAW);
     this.cubeVertexTextureCoordBuffer.itemSize = 2;
-    this.cubeVertexTextureCoordBuffer.numItems = uvs.length/2;
+    this.cubeVertexTextureCoordBuffer.numItems = this.uvs.length/2;
 
     this.cubeVertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.cubeVertexIndexBuffer);
 
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.vertexIndices), gl.STATIC_DRAW);
     this.cubeVertexIndexBuffer.itemSize = 1;
-    this.cubeVertexIndexBuffer.numItems = vertexIndices.length;
+    this.cubeVertexIndexBuffer.numItems = this.vertexIndices.length;
 }
 
 

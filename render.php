@@ -20,6 +20,7 @@
 
 <!--Resize Canvas-->
 <script type="text/javascript">
+    //disable the right clic action on the page
     document.oncontextmenu = function(){return false;};
 
     function resize()
@@ -43,7 +44,7 @@
 
 </head>
 
- <body onload="webGLStart(); resize();" onresize="resize();">
+ <body onload="webGLStart(); resize();" onresize="resize();" id="body">
     <?php
          if(isset($_GET["directory"]))
          {
@@ -65,6 +66,7 @@
          else
             echo("<p style='text-align: center;'><font color='red'>No file selected</font></p>");
     ?>
+    <input type="button" value="Edit" id="editButton"><br>
 
     <canvas id="canvas" height="800" width="800"></canvas><br><br>
 

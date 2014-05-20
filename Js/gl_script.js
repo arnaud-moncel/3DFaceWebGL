@@ -38,14 +38,14 @@ function loadObj(filename)
         {
             objStr=xmlhttp.responseText;
         }
-    }
+    };
     xmlhttp.open("GET",filename,false);
     xmlhttp.send();
     objStr=xmlhttp.responseText;
 }
 
 var scene;
-
+var face;
 
 
 var viewMat = mat4.create();
@@ -94,23 +94,44 @@ var mouseDown = false;
 var mouseButtonRight = false;
 var lastMouseX = null;
 var lastMouseY = null;
+var edit = true;
 
-
+var controlPoint = new Array;
+function getZone()
+{
+    //intersection bitwen halfline from the point and the polygon !
+}
 
 
 function handleMouseDown(event)
 {
     mouseDown = true;
 
-    if(event.which == 3)//right button mouse
+    if(edit)
     {
-        mouseButtonRight = true;
+        if(event.which == 3)//right button mouse
+            mouseButtonRight = true;
+        else
+            mouseButtonRight = false;
+
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
     }
     else
-        mouseButtonRight = false;
+    {
+        var canvas = document.getElementById("canvas");
+        var mPosX = event.clientX - (canvas.getBoundingClientRect().left + canvas.width/2);
+        var mPosY = -(event.clientY - (canvas.getBoundingClientRect().top + canvas.height/2));
 
-    lastMouseX = event.clientX;
-    lastMouseY = event.clientY;
+        var realPos = mat4.multiplyVec3(pMatrix, [mPosX, mPosY, 1]);
+
+        console.log("Mouse pos: X=" + realPos[0]*scale/100 + ", Y=" + realPos[1]*scale/100);
+
+        controlPoint.push(realPos[0]*scale/100, realPos[1]*scale/100);
+
+        if(controlPoint.length == 8)
+            getZone();
+    }
 }
 
 function handleMouseUp(event)
@@ -126,31 +147,34 @@ function handleMouseMove(event)
         return;
     }
 
-    var newX = event.clientX;
-    var newY = event.clientY;
-
-    var deltaX = newX - lastMouseX;
-    var deltaY = newY - lastMouseY;
-
-    var transformedMatrix = mat4.create();
-    mat4.identity(transformedMatrix);
-
-    if(!mouseButtonRight)
+    if(edit)
     {
-        mat4.rotate(transformedMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+        var newX = event.clientX;
+        var newY = event.clientY;
 
-        mat4.rotate(transformedMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+        var deltaX = newX - lastMouseX;
+        var deltaY = newY - lastMouseY;
+
+        var transformedMatrix = mat4.create();
+        mat4.identity(transformedMatrix);
+
+        if(!mouseButtonRight)
+        {
+            mat4.rotate(transformedMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+            mat4.rotate(transformedMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+        }
+        else
+        {
+            mat4.translate(transformedMatrix, [deltaX/(50*scale), -deltaY/(50*scale), 0]);
+        }
+
+        mat4.multiply(transformedMatrix, viewMat, viewMat);
+
+        viewTransform.setMatrix(viewMat);
+        lastMouseX = newX;
+        lastMouseY = newY;
     }
-    else
-    {
-        mat4.translate(transformedMatrix, [deltaX/(50*scale), -deltaY/(50*scale), 0]);
-    }
-
-    mat4.multiply(transformedMatrix, viewMat, viewMat);
-
-    viewTransform.setMatrix(viewMat);
-    lastMouseX = newX;
-    lastMouseY = newY;
 }
 
 function handleKeyDown(event)

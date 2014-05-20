@@ -379,7 +379,12 @@ $(function()
                 phongHtml = $("#illuminationModel").val() == "Phong" ? 1:0;
         });
 
-
+    $("#editButton").click(
+        function()
+        {
+            edit = !edit;
+            edit ? $("#editButton").val("Edit") : $("#editButton").val("Select");
+        });
 
 
     /**
@@ -414,7 +419,7 @@ $(function()
         $("#sliderLightSpecG").slider("value", lightColorHtml[$("input.lightSelectedStr").val()-1][2][1]);
         $("#sliderLightSpecB").slider("value", lightColorHtml[$("input.lightSelectedStr").val()-1][2][2]);
     }
-    setSliderValue();
+
 
     //Set the label value on the slider value
     function setLabelValue()
@@ -443,7 +448,7 @@ $(function()
         $("#lightSpecG").val($("#sliderLightSpecG").slider("value"));
         $("#lightSpecB").val($("#sliderLightSpecB").slider("value"));
     }
-    setLabelValue();
+
 
     //Set value of the enableLightButton on the selected light
     function setEnabledLight(b)
@@ -469,7 +474,7 @@ $(function()
             }
         }
     }
-    setEnabledLight(true);
+
 
     function firstInit()
     {
@@ -508,6 +513,26 @@ $(function()
         $("#roughness").val($("#sliderRoughness").slider("value"));
         $("#indiceOfRefraction").val($("#sliderIndiceOfRefraction").slider("value"));
     }
-    firstInit();
+
+    function initJQ()
+    {
+        setSliderValue();
+        setLabelValue();
+        setEnabledLight(true);
+        firstInit();
+    }
+
+    //document.getElementById("body").addEventListener("load", initJQ());
+    $("body").load(initJQ());
 
 });
+
+$(window).keydown(
+    function(event)
+    {
+        if(event.keyCode == 69)
+        {
+            edit = !edit;
+            edit ? $("#editButton").val("Edit") : $("#editButton").val("Select");
+        }
+    });
