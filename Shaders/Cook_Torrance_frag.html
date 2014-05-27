@@ -149,9 +149,9 @@
     //for phong
     vec3 getSpecular(vec3 normal, vec3 lightDir, vec3 viewDir, float specPow, vec3 col)
     {
-        vec3 transformedNormal =normalize(uNMatrix * normal);
-        vec3 reflectDir = normalize(reflect(lightDir, transformedNormal));
-        float specAngle = max(dot(reflectDir, viewDir), 0.0);//max(dot(transformedNormal.xyz, lightDir), 0.0);//
+       // vec3 transformedNormal =normalize(uNMatrix * normal);
+        vec3 reflectDir = normalize(reflect(-lightDir, normal));
+        float specAngle = max(dot(reflectDir, viewDir), 0.0); //max(dot(transformedNormal.xyz, lightDir), 0.0);//
         float specular = pow(specAngle, specPow);
         return vec3(specular)*col;
     }
@@ -201,11 +201,14 @@
             {
                 if(phong == 1)
                 {
-                    specComponent += getSpecular(snorm, normalize(lightDirection[i]), viewVec, 10.0, specTexColor.rgb);
+                    vec3 spec = getSpecular(snorm, normalize(lightDirection[i]), viewVec, 10.0, specTexColor.rgb);
+                    specComponent += spec * lightSpecular[i] * materialSpecular;
                 }
                 else
                 {
-                    spec[i] = specular(lightPos[i], viewVec, normalize(vNormal), snorm, roughness, indiceOfRefraction);
+                   // vec3 transformedSnorm =normalize(uNMatrix * snorm);
+                    vec3 transformedVnorm =normalize(uNMatrix * vNormal);
+                    spec[i] = specular(normalize(-lightDirection[i]), viewVec, transformedVnorm, snorm, roughness, indiceOfRefraction);
 
                     specComponent += spec[i] * lightSpecular[i] * materialSpecular * specTexColor.rgb;
                 }

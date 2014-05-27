@@ -555,7 +555,7 @@ function vertex(X, Y, Z)
     this.z = Z;
 }
 
-//dot
+//vectoriel
 function vecto(v1, v2)
 {
     this.x = v1.y * v2.z - v1.z * v2.y;
@@ -771,11 +771,16 @@ function Obj(gl, text, size)
         }
     }
 
-    meshDecimation(this.vertices, this.vertexIndices);
+    //meshDecimation(this.vertices, this.vertexIndices);
 
+    console.log("befor reInd");
+    console.log(this.uvs);
 
     normals = fixIndices(this.vertexIndices, normalIndices, normals, 3);
     this.uvs = fixIndices(this.vertexIndices, uvIndices, this.uvs, 2);
+
+    console.log("after reInd");
+    console.log(this.uvs);
 
     this.cubeVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);

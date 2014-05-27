@@ -97,9 +97,96 @@ var lastMouseY = null;
 var edit = true;
 
 var controlPoint = new Array;
+
 function getZone()
 {
+    //preselection
+    var minX = 0;
+    var maxX = 0;
+    var minY = 0;
+    var maxY = 0;
+
+    for(var i=0; i<controlPoint.length; i+=2)
+    {
+        if(minX > controlPoint[i])
+            minX = controlPoint[i];
+        else if (maxX < controlPoint[i])
+            maxX = controlPoint[i];
+
+        if(minY > controlPoint[i+1])
+            minY = controlPoint[i+1];
+        else if (maxY < controlPoint[i+1])
+            maxY = controlPoint[i+1];
+    }
+
+    var removedPointId = new Array();
+
     //intersection bitwen halfline from the point and the polygon !
+    for(var i=0; i<face.vertices.length; i+=3)
+    {
+        //remove the point if it's out the boundingBox
+        if(face.vertices[i] < minX || face.vertices[i] > maxX)
+        {
+            //dell the point
+            removedPointId.push(i/3+removedPointId.length);
+            face.vertices.splice(i, 3);
+            face.uvs.splice(i, 2);
+            i-=3;
+            continue;
+        }
+
+        if(face.vertices[i+1] < minY || face.vertices[i+1] > maxY)
+        {
+            //dell the point
+            removedPointId.push(i/3+removedPointId.length);
+            face.vertices.splice(i, 3);
+            face.uvs.splice(i, 2);
+            i-=3;
+            continue;
+        }
+    }
+
+    for(var i=0; i<removedPointId.length; i++)
+    {
+        var id = face.vertexIndices.indexOf(removedPointId[i]);
+        while(id != -1)
+        {
+            casseLesCOuille = face.vertexIndices.splice(id-id%3, 3);
+
+            id = face.vertexIndices.indexOf(removedPointId[i]);
+        }
+    }
+
+    //todo dec the ind on the face vector
+    for(var i=0; i<removedPointId.length; i++)
+     {
+         for(j=0; j<face.vertexIndices.length; j++)
+         {
+             if(face.vertexIndices[j] > removedPointId[i]-i)
+                face.vertexIndices[j] -= 1;
+         }
+     }
+
+    face.cubeVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, face.cubeVertexPositionBuffer);
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face.vertices),gl.STATIC_DRAW);
+    face.cubeVertexPositionBuffer.itemSize = 3;
+    face.cubeVertexPositionBuffer.numItems = face.vertices.length/3;
+
+    face.cubeVertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, face.cubeVertexTextureCoordBuffer);
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(face.uvs), gl.STATIC_DRAW);
+    face.cubeVertexTextureCoordBuffer.itemSize = 2;
+    face.cubeVertexTextureCoordBuffer.numItems = face.uvs.length/2;
+
+    face.cubeVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, face.cubeVertexIndexBuffer);
+
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(face.vertexIndices), gl.STATIC_DRAW);
+    face.cubeVertexIndexBuffer.itemSize = 1;
+    face.cubeVertexIndexBuffer.numItems = face.vertexIndices.length;
 }
 
 
@@ -125,11 +212,11 @@ function handleMouseDown(event)
 
         var realPos = mat4.multiplyVec3(pMatrix, [mPosX, mPosY, 1]);
 
-        console.log("Mouse pos: X=" + realPos[0]*scale/100 + ", Y=" + realPos[1]*scale/100);
+        console.log("Mouse pos: X=" + realPos[0]/100 + ", Y=" + realPos[1]/100);
 
-        controlPoint.push(realPos[0]*scale/100, realPos[1]*scale/100);
+        controlPoint.push(realPos[0]/100, realPos[1]/100);
 
-        if(controlPoint.length == 8)
+        if(controlPoint.length >= 6)
             getZone();
     }
 }
