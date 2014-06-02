@@ -615,7 +615,7 @@ function Obj(gl, text, size)
 
     // vn float float float
 
-    //var normal_pattern = /vn( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)/;
+    var normal_pattern = /vn( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)( +[\d|\.|\+|\-|e]+)/;
 
     // vt float float
 
@@ -623,7 +623,7 @@ function Obj(gl, text, size)
 
     // f vertex vertex vertex
 
-    //var face_pattern1 = /f( +\d+)( +\d+)( +\d+)/;
+    var face_pattern1 = /f( +\d+)( +\d+)( +\d+)/;
 
     // f vertex/uv vertex/uv vertex/uv
 
@@ -631,7 +631,7 @@ function Obj(gl, text, size)
 
     // f vertex/uv/normal vertex/uv/normal vertex/uv/normal
 
-   //var face_pattern3 = /f( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))/;
+   var face_pattern3 = /f( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))/;
 
     // f vertex//normal vertex//normal vertex//normal
 
@@ -661,8 +661,9 @@ function Obj(gl, text, size)
                 parseFloat( result[ 2 ] ),
                 parseFloat( result[ 3 ] )
              );
+            continue;
         }
-        /*else if ( ( result = normal_pattern.exec( line ) ) !== null )
+        else if ( ( result = normal_pattern.exec( line ) ) !== null )
         {
             // ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
 
@@ -671,7 +672,7 @@ function Obj(gl, text, size)
                 parseFloat( result[ 2 ] ),
                 parseFloat( result[ 3 ] )
              );
-        }*/
+        }
         else if ( ( result = uv_pattern.exec( line ) ) !== null )
         {
             // ["vt 0.1 0.2", "0.1", "0.2"]
@@ -680,12 +681,13 @@ function Obj(gl, text, size)
                 parseFloat( result[ 1 ] ),
                 parseFloat( result[ 2 ] )
              );
+            continue;
         }
-        /*else if ( ( result = face_pattern1.exec( line ) ) !== null )
+        else if ( ( result = face_pattern1.exec( line ) ) !== null )
         {
             // ["f 1 2 3", "1", "2", "3"]
 
-            vertexIndices.push(
+            this.vertexIndices.push(
                  parseInt( result[ 1 ] ) - 1 ,
                  parseInt( result[ 2 ] ) - 1 ,
                  parseInt( result[ 3 ] ) - 1
@@ -701,7 +703,7 @@ function Obj(gl, text, size)
                  parseInt( result[ 2 ] ) - 1 ,
                  parseInt( result[ 3 ] ) - 1
             );
-        }*/
+        }
         else if ( ( result = face_pattern2.exec( line ) ) !== null )
         {
             // ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3"]
@@ -722,12 +724,13 @@ function Obj(gl, text, size)
                  parseInt( result[ 5 ] ) - 1 ,
                  parseInt( result[ 8 ] ) - 1
             );
+            continue;
         }
-       /* else if ( ( result = face_pattern3.exec( line ) ) !== null )
+        else if ( ( result = face_pattern3.exec( line ) ) !== null )
         {
             // ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3"]
 
-            vertexIndices.push(
+            this.vertexIndices.push(
                  parseInt( result[ 2 ] ) - 1 ,
                  parseInt( result[ 6 ] ) - 1 ,
                  parseInt( result[ 10 ] ) - 1
@@ -744,7 +747,7 @@ function Obj(gl, text, size)
                  parseInt( result[ 8 ] ) - 1 ,
                  parseInt( result[ 12 ] ) - 1
             );
-        }*/
+        }
        /* else if ( ( result = face_pattern4.exec( line ) ) !== null )
         {
             // ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3"]
@@ -767,20 +770,14 @@ function Obj(gl, text, size)
         }*/
         else
         {
-             console.log( "ObjLoader: Unhandled line " + line );
+            console.log( "ObjLoader: Unhandled line " + line );
         }
     }
 
     //meshDecimation(this.vertices, this.vertexIndices);
 
-    console.log("befor reInd");
-    console.log(this.uvs);
-
     normals = fixIndices(this.vertexIndices, normalIndices, normals, 3);
     this.uvs = fixIndices(this.vertexIndices, uvIndices, this.uvs, 2);
-
-    console.log("after reInd");
-    console.log(this.uvs);
 
     this.cubeVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);

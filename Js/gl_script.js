@@ -146,18 +146,21 @@ function getZone()
         }
     }
 
+    console.log(face.vertexIndices.length);
+    console.log(face.uvs.length);
     for(var i=0; i<removedPointId.length; i++)
     {
         var id = face.vertexIndices.indexOf(removedPointId[i]);
         while(id != -1)
         {
-            casseLesCOuille = face.vertexIndices.splice(id-id%3, 3);
+            face.vertexIndices.splice(id-id%3, 3);
 
             id = face.vertexIndices.indexOf(removedPointId[i]);
         }
     }
+    console.log(face.vertexIndices.length);
+    console.log(face.uvs.length);
 
-    //todo dec the ind on the face vector
     for(var i=0; i<removedPointId.length; i++)
      {
          for(j=0; j<face.vertexIndices.length; j++)
@@ -324,19 +327,19 @@ function setTextures(gl, shaderProgram)
 
 var roughnessHtml = 0.1;
 var indiceOfRefractionHtml = 3.0;
-var ecPosition = [0.0, 0.0, 10.0];
+var ecPosition = [0.0, 0.0, -10.0];
 
 var phongHtml = 0;
 
 var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
 var lightPosHtml = [[0.0, 0.0, 15.0], [100.0, -100.0, 50.0], [50.0, 25.0, 10.0]];
 var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0]];
-var lightColorHtml = [[[0.2, 0.2, 0.2], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
-                      [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
-                      [[0.2, 0.2, 0.2], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
+var lightColorHtml = [[[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
 var lightCutoffHtml = [0.0, 90.0, 20.0];
 
-var materialAmbientHtml = [0.2, 0.2, 0.2];
+var materialAmbientHtml = [0.4, 0.4, 0.4];
 var materialDiffuseHtml = [0.6, 0.6, 0.6];
 var materialSpecularHtml = [0.7, 0.7, 0.7];
 
@@ -360,15 +363,15 @@ function setUniform(gl, shaderProgram)
     shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
     gl.uniform1iv(shaderProgram.enabledLights, enabledLightHtml);
 
-    var lightPos = [parseFloat(lightPosHtml[0][0]), parseFloat(lightPosHtml[0][1]), parseFloat(lightPosHtml[0][2]),
-                    parseFloat(lightPosHtml[1][0]), parseFloat(lightPosHtml[1][1]), parseFloat(lightPosHtml[1][2]),
-                    parseFloat(lightPosHtml[2][0]), parseFloat(lightPosHtml[2][1]), parseFloat(lightPosHtml[2][2])];
+    var lightPos = [parseFloat(lightPosHtml[0][0]), parseFloat(lightPosHtml[0][1]), -parseFloat(lightPosHtml[0][2]),
+                    parseFloat(lightPosHtml[1][0]), parseFloat(lightPosHtml[1][1]), -parseFloat(lightPosHtml[1][2]),
+                    parseFloat(lightPosHtml[2][0]), parseFloat(lightPosHtml[2][1]), -parseFloat(lightPosHtml[2][2])];
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), parseFloat(lightDirHtml[0][2]),
-                          parseFloat(lightDirHtml[1][0]), parseFloat(lightDirHtml[1][1]), parseFloat(lightDirHtml[1][2]),
-                          parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), parseFloat(lightDirHtml[2][2])];
+    var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), -parseFloat(lightDirHtml[0][2]),
+                          parseFloat(lightDirHtml[1][0]), parseFloat(lightDirHtml[1][1]), -parseFloat(lightDirHtml[1][2]),
+                          parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), -parseFloat(lightDirHtml[2][2])];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
     gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 

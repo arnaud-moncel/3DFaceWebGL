@@ -13,8 +13,8 @@
 <script type="text/javascript" src="Js/scenegraph.js"></script>
 
 <?php
-    include "Shaders/Cook_Torrance_frag.html";
-    include "Shaders/Cook_Torrance_vert.html";
+    include "Shaders/phong_frag.html";
+    include "Shaders/phong_vert.html";
 ?>
 <script type="text/javascript" src="Js/gl_script.js"></script>
 
