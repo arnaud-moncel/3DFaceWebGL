@@ -363,15 +363,15 @@ function setUniform(gl, shaderProgram)
     shaderProgram.enabledLights = gl.getUniformLocation(shaderProgram, "enabledLights");
     gl.uniform1iv(shaderProgram.enabledLights, enabledLightHtml);
 
-    var lightPos = [parseFloat(lightPosHtml[0][0]), parseFloat(lightPosHtml[0][1]), -parseFloat(lightPosHtml[0][2]),
-                    parseFloat(lightPosHtml[1][0]), parseFloat(lightPosHtml[1][1]), -parseFloat(lightPosHtml[1][2]),
-                    parseFloat(lightPosHtml[2][0]), parseFloat(lightPosHtml[2][1]), -parseFloat(lightPosHtml[2][2])];
+    var lightPos = [parseFloat(lightPosHtml[0][0]), parseFloat(lightPosHtml[0][1]), parseFloat(lightPosHtml[0][2]),
+                    parseFloat(lightPosHtml[1][0]), parseFloat(lightPosHtml[1][1]), parseFloat(lightPosHtml[1][2]),
+                    parseFloat(lightPosHtml[2][0]), parseFloat(lightPosHtml[2][1]), parseFloat(lightPosHtml[2][2])];
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), -parseFloat(lightDirHtml[0][2]),
-                          parseFloat(lightDirHtml[1][0]), parseFloat(lightDirHtml[1][1]), -parseFloat(lightDirHtml[1][2]),
-                          parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), -parseFloat(lightDirHtml[2][2])];
+    var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), parseFloat(lightDirHtml[0][2]),
+                          parseFloat(lightDirHtml[1][0]), parseFloat(lightDirHtml[1][1]), parseFloat(lightDirHtml[1][2]),
+                          parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), parseFloat(lightDirHtml[2][2])];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
     gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 
