@@ -66,7 +66,7 @@
          else
             echo("<p style='text-align: center;'><font color='red'>No file selected</font></p>");
     ?>
-    <input type="button" value="Edit" id="editButton"><br>
+    <!--<input type="button" value="Edit" id="editButton"><br>-->
 
     <canvas id="canvas" height="800" width="800"></canvas><br><br>
 

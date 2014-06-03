@@ -1,0 +1,22 @@
+<script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec3 vMvPosition;
+    varying vec2 vTextureCoord;
+    varying vec3 vNormal;
+
+    void main(void)
+    {
+        vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+        vMvPosition = mvPosition.xyz;
+        vTextureCoord = aTextureCoord;
+        vNormal = aVertexNormal;
+
+        gl_Position = uPMatrix * mvPosition;
+    }
+</script>

@@ -97,23 +97,14 @@
                 Id += lightDiffuse[i] * textureColor * materialDiffuse * Kd * theta;
 
                 //specular
-                vec3 V = -vMvPosition;
-                V = normalize(V);
-                //vec3 R = 2.0 * dot(norm, V) * normS - V;
-                vec3 R = 2.0 * dot(norm, V) * norm - V;
-                R = normalize(R);
-
-                float alpha = dot(L, R);
-                alpha = max(alpha, 0.0);
-
-                Is += lightSpecular[i] * specColor * materialSpecular * Ks * pow(alpha, specPow);
+                //todo cook torrance
 
                 nbLight++;
             }
         }
 
-        Ia /= nbLight;
-        /*Id /= nbLight;
+        /*Ia /= nbLight;
+        Id /= nbLight;
         Is /= nbLight;*/
 
         vec3 I = Ia + Id + Is;
