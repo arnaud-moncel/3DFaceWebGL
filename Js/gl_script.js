@@ -332,12 +332,19 @@ var ecPosition = [0.0, 0.0, -10.0];
 var phongHtml = 0;
 
 var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
-var lightPosHtml = [[0.0, 0.0, 15.0], [100.0, -100.0, 50.0], [50.0, 25.0, 10.0]];
-var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0]];
+var lightPosHtml = [[0.0, 0.0, 15.0], [100.0, -100.0, 50.0], [50.0, 25.0, 10.0], [0.0, 0.0, 15.0],
+                    [100.0, -100.0, 50.0], [50.0, 25.0, 10.0], [0.0, 0.0, 15.0], [100.0, -100.0, 50.0]];
+var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0], [0.0, 0.0, -10.0],
+                    [0.0, 0.0, -10.0], [100.0, 100.0, -50.0], [0.0, 0.0, -10.0], [0.0, 0.0, -10.0]];
 var lightColorHtml = [[[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
+                      [[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
-var lightCutoffHtml = [0.0, 90.0, 20.0];
+var lightCutoffHtml = [0.0, 90.0, 20.0, 0.0, 90.0, 20.0, 0.0, 90.0];
 
 var materialAmbientHtml = [0.4, 0.4, 0.4];
 var materialDiffuseHtml = [0.6, 0.6, 0.6];
@@ -365,31 +372,56 @@ function setUniform(gl, shaderProgram)
 
     var lightPos = [parseFloat(lightPosHtml[0][0]), parseFloat(lightPosHtml[0][1]), parseFloat(lightPosHtml[0][2]),
                     parseFloat(lightPosHtml[1][0]), parseFloat(lightPosHtml[1][1]), parseFloat(lightPosHtml[1][2]),
-                    parseFloat(lightPosHtml[2][0]), parseFloat(lightPosHtml[2][1]), parseFloat(lightPosHtml[2][2])];
+                    parseFloat(lightPosHtml[2][0]), parseFloat(lightPosHtml[2][1]), parseFloat(lightPosHtml[2][2]),
+                    parseFloat(lightPosHtml[3][0]), parseFloat(lightPosHtml[3][1]), parseFloat(lightPosHtml[3][2]),
+                    parseFloat(lightPosHtml[4][0]), parseFloat(lightPosHtml[4][1]), parseFloat(lightPosHtml[4][2]),
+                    parseFloat(lightPosHtml[5][0]), parseFloat(lightPosHtml[5][1]), parseFloat(lightPosHtml[5][2]),
+                    parseFloat(lightPosHtml[6][0]), parseFloat(lightPosHtml[6][1]), parseFloat(lightPosHtml[6][2]),
+                    parseFloat(lightPosHtml[7][0]), parseFloat(lightPosHtml[7][1]), parseFloat(lightPosHtml[7][2])];
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
     var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), parseFloat(lightDirHtml[0][2]),
                           parseFloat(lightDirHtml[1][0]), parseFloat(lightDirHtml[1][1]), parseFloat(lightDirHtml[1][2]),
-                          parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), parseFloat(lightDirHtml[2][2])];
+                          parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), parseFloat(lightDirHtml[2][2]),
+                          parseFloat(lightDirHtml[3][0]), parseFloat(lightDirHtml[3][1]), parseFloat(lightDirHtml[3][2]),
+                          parseFloat(lightDirHtml[4][0]), parseFloat(lightDirHtml[4][1]), parseFloat(lightDirHtml[4][2]),
+                          parseFloat(lightDirHtml[5][0]), parseFloat(lightDirHtml[5][1]), parseFloat(lightDirHtml[5][2]),
+                          parseFloat(lightDirHtml[6][0]), parseFloat(lightDirHtml[6][1]), parseFloat(lightDirHtml[6][2]),
+                          parseFloat(lightDirHtml[7][0]), parseFloat(lightDirHtml[7][1]), parseFloat(lightDirHtml[7][2])];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
     gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
 
     var lightAmbient = [parseFloat(lightColorHtml[0][0][0]), parseFloat(lightColorHtml[0][0][1]), parseFloat(lightColorHtml[0][0][2]),
                         parseFloat(lightColorHtml[1][0][0]), parseFloat(lightColorHtml[1][0][1]), parseFloat(lightColorHtml[1][0][2]),
-                        parseFloat(lightColorHtml[2][0][0]), parseFloat(lightColorHtml[2][0][1]), parseFloat(lightColorHtml[2][0][2])];
+                        parseFloat(lightColorHtml[2][0][0]), parseFloat(lightColorHtml[2][0][1]), parseFloat(lightColorHtml[2][0][2]),
+                        parseFloat(lightColorHtml[3][0][0]), parseFloat(lightColorHtml[3][0][1]), parseFloat(lightColorHtml[3][0][2]),
+                        parseFloat(lightColorHtml[4][0][0]), parseFloat(lightColorHtml[4][0][1]), parseFloat(lightColorHtml[4][0][2]),
+                        parseFloat(lightColorHtml[5][0][0]), parseFloat(lightColorHtml[5][0][1]), parseFloat(lightColorHtml[5][0][2]),
+                        parseFloat(lightColorHtml[6][0][0]), parseFloat(lightColorHtml[6][0][1]), parseFloat(lightColorHtml[6][0][2]),
+                        parseFloat(lightColorHtml[7][0][0]), parseFloat(lightColorHtml[7][0][1]), parseFloat(lightColorHtml[7][0][2])];
     shaderProgram.lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
     gl.uniform3fv(shaderProgram.lightAmbient, lightAmbient);
 
     var lightDiffuse = [parseFloat(lightColorHtml[0][1][0]), parseFloat(lightColorHtml[0][1][1]), parseFloat(lightColorHtml[0][1][2]),
                         parseFloat(lightColorHtml[1][1][0]), parseFloat(lightColorHtml[1][1][1]), parseFloat(lightColorHtml[1][1][2]),
-                        parseFloat(lightColorHtml[2][1][0]), parseFloat(lightColorHtml[2][1][1]), parseFloat(lightColorHtml[2][1][2])];
+                        parseFloat(lightColorHtml[2][1][0]), parseFloat(lightColorHtml[2][1][1]), parseFloat(lightColorHtml[2][1][2]),
+                        parseFloat(lightColorHtml[3][1][0]), parseFloat(lightColorHtml[3][1][1]), parseFloat(lightColorHtml[3][1][2]),
+                        parseFloat(lightColorHtml[4][1][0]), parseFloat(lightColorHtml[4][1][1]), parseFloat(lightColorHtml[4][1][2]),
+                        parseFloat(lightColorHtml[5][1][0]), parseFloat(lightColorHtml[5][1][1]), parseFloat(lightColorHtml[5][1][2]),
+                        parseFloat(lightColorHtml[6][1][0]), parseFloat(lightColorHtml[6][1][1]), parseFloat(lightColorHtml[6][1][2]),
+                        parseFloat(lightColorHtml[7][1][0]), parseFloat(lightColorHtml[7][1][1]), parseFloat(lightColorHtml[7][1][2])];
     shaderProgram.lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
     gl.uniform3fv(shaderProgram.lightDiffuse, lightDiffuse);
 
     var lightSpecular = [parseFloat(lightColorHtml[0][2][0]), parseFloat(lightColorHtml[0][2][1]), parseFloat(lightColorHtml[0][2][2]),
                          parseFloat(lightColorHtml[1][2][0]), parseFloat(lightColorHtml[1][2][1]), parseFloat(lightColorHtml[1][2][2]),
-                         parseFloat(lightColorHtml[2][2][0]), parseFloat(lightColorHtml[2][2][1]), parseFloat(lightColorHtml[2][2][2])];
+                         parseFloat(lightColorHtml[2][2][0]), parseFloat(lightColorHtml[2][2][1]), parseFloat(lightColorHtml[2][2][2]),
+                         parseFloat(lightColorHtml[3][2][0]), parseFloat(lightColorHtml[3][2][1]), parseFloat(lightColorHtml[3][2][2]),
+                         parseFloat(lightColorHtml[4][2][0]), parseFloat(lightColorHtml[4][2][1]), parseFloat(lightColorHtml[4][2][2]),
+                         parseFloat(lightColorHtml[5][2][0]), parseFloat(lightColorHtml[5][2][1]), parseFloat(lightColorHtml[5][2][2]),
+                         parseFloat(lightColorHtml[6][2][0]), parseFloat(lightColorHtml[6][2][1]), parseFloat(lightColorHtml[6][2][2]),
+                         parseFloat(lightColorHtml[7][2][0]), parseFloat(lightColorHtml[7][2][1]), parseFloat(lightColorHtml[7][2][2])];
     shaderProgram.lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
     gl.uniform3fv(shaderProgram.lightSpecular, lightSpecular);
 
