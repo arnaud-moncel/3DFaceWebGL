@@ -13,8 +13,8 @@
 <script type="text/javascript" src="Js/scenegraph.js"></script>
 
 <?php
-    include "Shaders/phong_frag.html";
-    include "Shaders/phong_vert.html";
+    include "Shaders/cook_frag.html";
+    include "Shaders/cook_vert.html";
 ?>
 <script type="text/javascript" src="Js/gl_script.js"></script>
 

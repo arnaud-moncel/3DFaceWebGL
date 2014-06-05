@@ -21,10 +21,10 @@
     </select>
     <input type="button" id="enableLightButton" value="Enabled">
     <input type="button" id="popupLightPosActivator" value="Light Position">
-    <input type="button" id="popupLightDirActivator" value="Light Direction"><br>
+    <!--<input type="button" id="popupLightDirActivator" value="Light Direction"><br>-->
     <input type="button" id="popupLightColorActivator" value="Light Color">
     <input type="button" id="popupMaterialColorActivator" value="Material Color">
-    <input type="button" id="popupOtherActivator" value="Other">
+    <input type="button" id="popupShaderActivator" value="Shader">
 </p>
 
 <!--The light position popup-->
@@ -47,7 +47,7 @@
 </div>
 
 <!--The light direction popup-->
-<div id="popupLightDir" class="popup" title="Tune the light direction">
+<!--<div id="popupLightDir" class="popup" title="Tune the light direction">
     <fieldset>
         <h3>ID light : <input type="text" class="lightSelectedStr" readonly></h3>
         <h4>Direction: </h4>
@@ -63,13 +63,12 @@
         <label>Z: </label>
         <input type="text" id="lightDirZ" readonly>
 
-        <!--Cut of-->
         <h4>Cut off: </h4>
         <div id="sliderLightCutOff" class="classSliderLightCutOff"></div>
         <label>Value: </label>
         <input type="text" id="lightCutOff" readonly>
     </fieldset>
-</div>
+</div>-->
 
 <!--The light color popup-->
 <div id="popupLightColor" class="popup" title="Tune the light color">
@@ -164,17 +163,22 @@
     </fieldset>
 </div>
 
-<!--The other popup-->
-<div id="popupOther" class="popup" title="Tune other parameters">
+<!--The shader popup-->
+<div id="popupShader" class="popup" title="Tune shader parameters">
     <fieldset>
-        <h4>Roughness: </h4>
-        <div id="sliderRoughness" class="classSliderRoughness"></div>
-        <label>X: </label>
-        <input type="text" id="roughness" readonly>
-
         <h4>Indice of refraction: </h4>
         <div id="sliderIndiceOfRefraction" class="classSliderIndiceOfRefraction"></div>
-        <label>Y: </label>
+        <label>ior: </label>
         <input type="text" id="indiceOfRefraction" readonly>
+
+        <h4>Roughness: </h4>
+        <div id="sliderRoughness" class="classSliderRoughness"></div>
+        <label>rough: </label>
+        <input type="text" id="roughness" readonly>
+
+        <h4>Fresnel power: </h4>
+        <div id="sliderFresnel" class="classSliderFresnel"></div>
+        <label>fresnel pow: </label>
+        <input type="text" id="fresnel" readonly>
     </fieldset>
 </div>

@@ -325,8 +325,9 @@ function setTextures(gl, shaderProgram)
     gl.uniform1i(shaderProgram.specularUniform, 5);
 }
 
-var roughnessHtml = 0.1;
-var indiceOfRefractionHtml = 3.0;
+var roughnessHtml = 0.3;
+var indiceOfRefractionHtml = 0.2;
+var fresnelPowHtml = 0.8;
 var ecPosition = [0.0, 0.0, -10.0];
 
 var phongHtml = 0;
@@ -334,8 +335,8 @@ var phongHtml = 0;
 var enabledLightHtml = [1, 0, 0, 0, 0, 0, 0, 0];
 var lightPosHtml = [[0.0, 0.0, 15.0], [100.0, -100.0, 50.0], [50.0, 25.0, 10.0], [0.0, 0.0, 15.0],
                     [100.0, -100.0, 50.0], [50.0, 25.0, 10.0], [0.0, 0.0, 15.0], [100.0, -100.0, 50.0]];
-var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0], [0.0, 0.0, -10.0],
-                    [0.0, 0.0, -10.0], [100.0, 100.0, -50.0], [0.0, 0.0, -10.0], [0.0, 0.0, -10.0]];
+/*var lightDirHtml = [[0.0, 0.0, -10.0], [0.0, 0.0, -10.0], [100.0, 100.0, -50.0], [0.0, 0.0, -10.0],
+                    [0.0, 0.0, -10.0], [100.0, 100.0, -50.0], [0.0, 0.0, -10.0], [0.0, 0.0, -10.0]];*/
 var lightColorHtml = [[[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
@@ -344,7 +345,7 @@ var lightColorHtml = [[[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.6, 0.6, 0.6], [0.7, 0.7, 0.7]],
                       [[0.4, 0.4, 0.4], [0.4, 0.4, 0.4], [0.7, 0.7, 0.7]]];
-var lightCutoffHtml = [0.0, 90.0, 20.0, 0.0, 90.0, 20.0, 0.0, 90.0];
+//var lightCutoffHtml = [0.0, 90.0, 20.0, 0.0, 90.0, 20.0, 0.0, 90.0];
 
 var materialAmbientHtml = [0.4, 0.4, 0.4];
 var materialDiffuseHtml = [0.6, 0.6, 0.6];
@@ -357,6 +358,8 @@ function setUniform(gl, shaderProgram)
     gl.uniform1f(shaderProgram.roughness, parseFloat(roughnessHtml));
     shaderProgram.indiceOfRefraction = gl.getUniformLocation(shaderProgram, "indiceOfRefraction");
     gl.uniform1f(shaderProgram.indiceOfRefraction, parseFloat(indiceOfRefractionHtml));
+    shaderProgram.FresnelPow = gl.getUniformLocation(shaderProgram, "fresnelPow");
+    gl.uniform1f(shaderProgram.FresnelPow, parseFloat(fresnelPowHtml));
 
     shaderProgram.ecPosition = gl.getUniformLocation(shaderProgram, "ecPosition");
     gl.uniform3fv(shaderProgram.ecPosition, ecPosition);
@@ -381,7 +384,7 @@ function setUniform(gl, shaderProgram)
     shaderProgram.lightPos = gl.getUniformLocation(shaderProgram, "lightPos");
     gl.uniform3fv(shaderProgram.lightPos, lightPos);
 
-    var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), parseFloat(lightDirHtml[0][2]),
+    /*var lightDirection = [parseFloat(lightDirHtml[0][0]), parseFloat(lightDirHtml[0][1]), parseFloat(lightDirHtml[0][2]),
                           parseFloat(lightDirHtml[1][0]), parseFloat(lightDirHtml[1][1]), parseFloat(lightDirHtml[1][2]),
                           parseFloat(lightDirHtml[2][0]), parseFloat(lightDirHtml[2][1]), parseFloat(lightDirHtml[2][2]),
                           parseFloat(lightDirHtml[3][0]), parseFloat(lightDirHtml[3][1]), parseFloat(lightDirHtml[3][2]),
@@ -390,7 +393,7 @@ function setUniform(gl, shaderProgram)
                           parseFloat(lightDirHtml[6][0]), parseFloat(lightDirHtml[6][1]), parseFloat(lightDirHtml[6][2]),
                           parseFloat(lightDirHtml[7][0]), parseFloat(lightDirHtml[7][1]), parseFloat(lightDirHtml[7][2])];
     shaderProgram.lightDirection = gl.getUniformLocation(shaderProgram, "lightDirection");
-    gl.uniform3fv(shaderProgram.lightDirection, lightDirection);
+    gl.uniform3fv(shaderProgram.lightDirection, lightDirection);*/
 
     var lightAmbient = [parseFloat(lightColorHtml[0][0][0]), parseFloat(lightColorHtml[0][0][1]), parseFloat(lightColorHtml[0][0][2]),
                         parseFloat(lightColorHtml[1][0][0]), parseFloat(lightColorHtml[1][0][1]), parseFloat(lightColorHtml[1][0][2]),
@@ -425,8 +428,8 @@ function setUniform(gl, shaderProgram)
     shaderProgram.lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
     gl.uniform3fv(shaderProgram.lightSpecular, lightSpecular);
 
-    shaderProgram.lightCutoff = gl.getUniformLocation(shaderProgram, "lightCutoff");
-    gl.uniform1fv(shaderProgram.lightCutoff, lightCutoffHtml);
+    /*shaderProgram.lightCutoff = gl.getUniformLocation(shaderProgram, "lightCutoff");
+    gl.uniform1fv(shaderProgram.lightCutoff, lightCutoffHtml);*/
 
 
     //material information

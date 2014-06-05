@@ -16,14 +16,14 @@ $(function()
         range: "min"
     };
 
-    var slideCutOffDef =
+    /*var slideCutOffDef =
     {
         min: -360,
         max: 360,
         values: 0,
         step: 1,
         range: "min"
-    };
+    };*/
 
     var slideColDef =
     {
@@ -46,13 +46,20 @@ $(function()
     var slideIndiceOfRefractionDef =
     {
         min: 0,
-        max: 5,
+        max: 1,
         values: 0,
         step: 0.01,
         range: "min"
     };
 
-
+    var slideFresnel =
+    {
+        min: 0,
+        max: 5,
+        values: 0,
+        step: 0.01,
+        range: "min"
+    };
 
     var slideFuncLightPos =
     {
@@ -77,7 +84,7 @@ $(function()
         }
     };
 
-    var slideFuncLightDir =
+    /*var slideFuncLightDir =
     {
         slide: function(event, ui)
         {
@@ -98,16 +105,16 @@ $(function()
                 lightDirHtml[$("input.lightSelectedStr").val()-1][2] = ui.value;
             }
         }
-    };
+    };*/
 
-    var slideFuncLightCutOff =
+    /*var slideFuncLightCutOff =
     {
         slide: function(event, ui)
         {
             $("#lightCutOff").val(ui.value);
             lightCutoffHtml[$("input.lightSelectedStr").val()-1] = ui.values;
         }
-    };
+    };*/
 
     var slideFuncLightAmb =
     {
@@ -259,7 +266,14 @@ $(function()
         }
     };
 
-
+    var slideFuncFresnel =
+    {
+        slide: function(event, ui)
+        {
+            $("#fresnel").val(ui.value);
+            fresnelPowHtml = ui.value;
+        }
+    };
 
     /**
      *  JQUERRY
@@ -269,12 +283,12 @@ $(function()
     $("div.sliderLightPos").slider("option", slideFuncLightPos);
 
     //The sliderLightDirection
-    $("div.sliderLightDir").slider(slideNumDef);
+    /*$("div.sliderLightDir").slider(slideNumDef);
     $("div.sliderLightDir").slider("option", slideFuncLightDir);
 
     //The CutOff slider
     $("div.classSliderLightCutOff").slider(slideCutOffDef);
-    $("div.classSliderLightCutOff").slider("option", slideFuncLightCutOff);
+    $("div.classSliderLightCutOff").slider("option", slideFuncLightCutOff);*/
 
     //The sliderLightAmb
     $("div.sliderLightAmb").slider(slideColDef);
@@ -308,6 +322,10 @@ $(function()
     $("div.classSliderIndiceOfRefraction").slider(slideIndiceOfRefractionDef);
     $("div.classSliderIndiceOfRefraction").slider("option", slideFuncIndiceOfRefraction);
 
+    //The fresnelPower
+    $("div.classSliderFresnel").slider(slideFresnel);
+    $("div.classSliderFresnel").slider("option", slideFuncFresnel);
+
 
     //The popup definition
     $("div.popup").dialog(
@@ -325,11 +343,11 @@ $(function()
             $("#popupLightPos").dialog("open");
         });
 
-    $("#popupLightDirActivator").click(
+    /*$("#popupLightDirActivator").click(
         function()
         {
             $("#popupLightDir").dialog("open");
-        });
+        });*/
 
     $("#popupLightColorActivator").click(
         function()
@@ -343,10 +361,10 @@ $(function()
             $("#popupMaterialColor").dialog("open");
         });
 
-    $("#popupOtherActivator").click(
+    $("#popupShaderActivator").click(
         function()
         {
-           $("#popupOther").dialog("open");
+           $("#popupShader").dialog("open");
         });
 
 
@@ -399,11 +417,11 @@ $(function()
         $("#sliderLightPosY").slider("value", lightPosHtml[$("input.lightSelectedStr").val()-1][1]);
         $("#sliderLightPosZ").slider("value", lightPosHtml[$("input.lightSelectedStr").val()-1][2]);
 
-        $("#sliderLightDirX").slider("value", lightDirHtml[$("input.lightSelectedStr").val()-1][0]);
+        /*$("#sliderLightDirX").slider("value", lightDirHtml[$("input.lightSelectedStr").val()-1][0]);
         $("#sliderLightDirY").slider("value", lightDirHtml[$("input.lightSelectedStr").val()-1][1]);
         $("#sliderLightDirZ").slider("value", lightDirHtml[$("input.lightSelectedStr").val()-1][2]);
 
-        $("#sliderLightCutOff").slider("value", lightCutoffHtml[$("input.lightSelectedStr").val()-1]);
+        $("#sliderLightCutOff").slider("value", lightCutoffHtml[$("input.lightSelectedStr").val()-1]);*/
 
 
         //For the light Color
@@ -428,11 +446,11 @@ $(function()
         $("#lightPosY").val($("#sliderLightPosY").slider("value"));
         $("#lightPosZ").val($("#sliderLightPosZ").slider("value"));
 
-        $("#lightDirX").val($("#sliderLightDirX").slider("value"));
+        /*$("#lightDirX").val($("#sliderLightDirX").slider("value"));
         $("#lightDirY").val($("#sliderLightDirY").slider("value"));
         $("#lightDirZ").val($("#sliderLightDirZ").slider("value"));
 
-        $("#lightCutOff").val($("#sliderLightCutOff").slider("value"));
+        $("#lightCutOff").val($("#sliderLightCutOff").slider("value"));*/
 
 
         //For the light color
@@ -479,7 +497,7 @@ $(function()
     function firstInit()
     {
         //first init of the select model
-        $("#illuminationModel").val(phongHtml == 1 ? "Phong":"Cook Torrance");
+        $("#illuminationModel").val(phongHtml == 1 ? "Phong" : "Cook Torrance");
 
         //First init of the material slider Color
         $("#sliderMaterialAmbR").slider("value", materialAmbientHtml[0]);
@@ -509,9 +527,11 @@ $(function()
 
         $("#sliderRoughness").slider("value", roughnessHtml);
         $("#sliderIndiceOfRefraction").slider("value", indiceOfRefractionHtml);
+        $("#sliderFresnel").slider("value", fresnelPowHtml);
 
         $("#roughness").val($("#sliderRoughness").slider("value"));
         $("#indiceOfRefraction").val($("#sliderIndiceOfRefraction").slider("value"));
+        $("#fresnel").val($("#sliderFresnel").slider("value"));
     }
 
     function initJQ()
