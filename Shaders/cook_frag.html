@@ -15,6 +15,10 @@
 
     //texture
     uniform sampler2D diffTexture;
+    uniform sampler2D redNormals;
+    uniform sampler2D greenNormals;
+    uniform sampler2D blueNormals;
+    uniform sampler2D specNormals;
     uniform sampler2D specTexture;
 
     //light information
@@ -84,12 +88,33 @@
         vec3 textureColor = texture2D(diffTexture, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
         vec3 specColor = texture2D(specTexture, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
 
+        //normal map
+        vec3 normR = texture2D(redNormals, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
+        normR  = normR * 2.0 - 1.0;
+        normR = uNMatrix * normR;
+        normR = normalize(normR);
+
+        vec3 normG = texture2D(greenNormals, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
+        normG  = normG * 2.0 - 1.0;
+        normG = uNMatrix * normG;
+        normG = normalize(normG);
+
+        vec3 normB = texture2D(blueNormals, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
+        normB  = normB * 2.0 - 1.0;
+        normB = uNMatrix * normB;
+        normB = normalize(normB);
+
+        vec3 normS = texture2D(specNormals, vec2(vTextureCoord.s, vTextureCoord.t)).rgb;
+        normS  = normS * 2.0 - 1.0;
+        normS = uNMatrix * normS;
+        normS = normalize(normS);
+
         //normal variable
         vec3 norm = normalize(uNMatrix * vNormal);
 
         vec3 viewVec = normalize(-ecPosition);
 
-        float Ka = 1.0;
+        float Ka = 0.5;
         float Kd = 2.5;
         float Ks = 0.8;
 
@@ -117,11 +142,20 @@
                 float theta = dot(L, norm);
                 theta = max(theta, 0.0);
 
-                Id += lightDiffuse[i] * textureColor * materialDiffuse * Kd * theta;
+                float thetaR = dot(L, normR);
+                thetaR = max(thetaR, 0.0);
+
+                float thetaG = dot(L, normG);
+                thetaG = max(thetaG, 0.0);
+
+                float thetaB = dot(L, normB);
+                thetaB = max(thetaB, 0.0);
+
+                Id += lightDiffuse[i] * textureColor * materialDiffuse * Kd * vec3(thetaR, thetaG, thetaB);// * theta;
 
                 //specular
                 float spec;
-                spec = phong == 1 ? getPhongSpec(norm, position, L) : getCookSpec(norm, viewVec, L);
+                spec = phong == 1 ? getPhongSpec(normS, position, L) : getCookSpec(normS, viewVec, L);
 
                 Is += lightSpecular[i] * specColor * materialSpecular * spec * Ks;
 

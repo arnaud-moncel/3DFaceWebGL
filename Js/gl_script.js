@@ -325,7 +325,7 @@ function setTextures(gl, shaderProgram)
     gl.uniform1i(shaderProgram.specularUniform, 5);
 }
 
-var roughnessHtml = 0.3;
+var roughnessHtml = 0.2;
 var indiceOfRefractionHtml = 0.2;
 var fresnelPowHtml = 0.8;
 var ecPosition = [0.0, 0.0, -10.0];
